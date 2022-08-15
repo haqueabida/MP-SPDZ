@@ -5,34 +5,71 @@ from Compiler import library
 program.bit_length = 32
 
 def merge_and_shuffle(combo):
-    """ Merge-and-scan style private set intersection
-
-    Returns: secret Array with intersection value if the element matches,
-            and a 0 where the elements do not match
+    """ Merges two databases A and B, which are concatenated within combo
+    then does a loop to find matches,
+    shuffles
+    then returns only the elements of B that matched
+    like a LEFT-JOIN on B
+    
+    Assume that the columns of A are ID, in_set_B = 0 , match-key = mk
+    Assume that the columns of B are ID, in_set_B = 1, match-key = 0
+    
+    If the ID matches, we return ID, in_set_B=1, match-key = mk
+    (although technically the middle column is not needed to return, this
+     is irrelevant either way)
     """
     N = len(combo)
     intersection = Matrix(N, 3, sint)
 
- 
-    # will bitonic merge work if it's a matrix?
-    # sort() should work in any case
-    #actually sort() with Batcher doesn't work
-    combo.sort()
 
- 
+    #Sort -- works as a merge of A, B within combo
+    #Assume that the elements of A come before B,
+    #i.e., we are matching first on ID, then by in_set_B
+    #sort() with Batcher doesn't work
+    combo.sort()
+    
+    
+    all_zeros = Array(3, sint)
+    all_zeros[0] = 0
+    all_zeros[1] = 0
+    all_zeros[2] = 0
+    
+    
+    # all_match = Matrix(N, 3, sint)
+    
+    # all_match[::][0:2].assign_vector(combo[::][0:2])
+    # all_match[1::][2].assign_vector(combo[0::][2])
+
+
+    #loops through each element, if it matches, then will create a row
+    #for B with the match key. Otherwise if the element is from B, we keep it.
+    #But if the element is from A, we set it to all 0s.
     @for_range(N-1)
     def _(i):
         match = combo[i][0] == combo[i+1][0]
-        #what do I want this output to be if they match?
-        #assume if they match, B's element is second
-        intersection[i] = if_else(match, [combo[i][0], combo[i+1][1], 1], [0,0,0])
-        
-        #remember I want to keep the value of B even if it DOESN'T match
-        #I'll need two if statements to make that happen
-        
+        @if_e(match)
+        def _():
+            
+            intersection[i+1].assign_vector([combo[i+1][0], 1, combo[i][2]])
+        @else_
+        def _():
+            #takes on the B value tho no match, if it's from B. otherwise 0s
+            if_else(combo[i+1][1]==1, intersection[i].assign_vector(combo[i+1]), intersection[i].assign_vector(all_zeros))
+
+                
+        #check the 0th element    
+    if_else(combo[0][1]==1, intersection[0].assign_vector(combo[0]), intersection[0].assign_vector(all_zeros))
+                    
+    
+    #shuffle to remove any knowledge about the order of matches
     intersection.secure_shuffle()
+    
+    #At this point, we can either reveal the outcome directly
+    #But we only want to the elements of B (otherwise the output is too large).
+    #So, in the main function we'll send this intersection to a filter and
+    #return only the elements of B.
 
-
+    
     return intersection
     
     
@@ -45,15 +82,15 @@ def filter_dummies(arr, A_size, B_size):
     
     N = len(arr)
     
-    leftovers = Matrix(B_size, 2, sint)
+    distinguished = Matrix(B_size, 2, sint)
     
     @for_range(N)
     def _(i):
         if (arr[i][1].reveal()==0):
-            leftovers[i][0] = arr[i][0]
-            leftovers[i][1] = arr[i][2]
+            distinguished[i][0] = arr[i][0]
+            distinguished[i][1] = arr[i][2]
             
-    return leftovers
+    return distinguished
             
     
 
