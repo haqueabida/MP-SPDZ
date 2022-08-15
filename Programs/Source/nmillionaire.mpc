@@ -1,0 +1,19 @@
+from util import if_else
+
+def millionaires(N):
+	V=Array(N,sint)
+	R = Array(N,sint)
+	for i in range(N):
+		inps = [sint.get_raw_input_from(i) for _ in range(2)]
+		V[i] = inps[0]
+		R[i] = sint(0)
+
+	m = V[0]
+	for i in range(N):
+		m = if_else(V[i] >= m, V[i],m)
+	for i in range(N):
+		R[i] = if_else(V[i] >=m, sint(1), sint(0))
+	for i in range(N):
+		print_ln('Output for %s is: %s', i, R[i], reveal())
+
+millionaires(256)

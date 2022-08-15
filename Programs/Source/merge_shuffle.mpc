@@ -1,0 +1,93 @@
+import util
+from util import if_else
+from Compiler import library
+
+program.bit_length = 32
+
+def merge_and_shuffle(combo):
+    """ Merge-and-scan style private set intersection
+
+    Returns: secret Array with intersection value if the element matches,
+            and a 0 where the elements do not match
+    """
+    N = len(combo)
+    intersection = Matrix(N, 3, sint)
+
+ 
+    # will bitonic merge work if it's a matrix?
+    # sort() should work in any case
+    #actually sort() with Batcher doesn't work
+    combo.sort()
+
+ 
+    @for_range(N-1)
+    def _(i):
+        match = combo[i][0] == combo[i+1][0]
+        #what do I want this output to be if they match?
+        #assume if they match, B's element is second
+        intersection[i] = if_else(match, [combo[i][0], combo[i+1][1], 1], [0,0,0])
+        
+        #remember I want to keep the value of B even if it DOESN'T match
+        #I'll need two if statements to make that happen
+        
+    intersection.secure_shuffle()
+
+
+    return intersection
+    
+    
+def filter_dummies(arr, A_size, B_size):
+    """
+    Removes the elements that are dummies, 
+    i.e. those that are marked with 0
+    In this case we know a-priori how many elements are 0/1
+    """
+    
+    N = len(arr)
+    
+    leftovers = Matrix(B_size, 2, sint)
+    
+    @for_range(N)
+    def _(i):
+        if (arr[i][1].reveal()==0):
+            leftovers[i][0] = arr[i][0]
+            leftovers[i][1] = arr[i][2]
+            
+    return leftovers
+            
+    
+
+def shuffled_intersection_inputs(n, m):
+    combo = Matrix(n+m, 3, sint)
+
+
+    # input of each player, along with what set it came from
+    @for_range_opt(n)
+    def _(i):
+        combo[i][0] = sfix.get_input_from(0)
+        combo[i][1] = 0
+        combo[i][2] = i #want this to be the match key but don't know how to take input
+    @for_range_opt(m)
+    def _(i):
+        combo[i+n][0] = sfix.get_input_from(1)
+        combo[i+n][1] =1
+        combo[i+n][2] = 0
+        
+        
+
+    shuf_int = merge_and_shuffle(combo)
+    
+    @for_range(n+m)
+    def _(i):
+        print_str('%s, ', shuf_int[i][0].reveal())
+        
+    print_ln('******')
+    
+    
+    
+    @for_range(n+m)
+    def _(i):
+        print_str('%s, ', shuf_int[i][1].reveal())
+        
+
+shuffled_intersection_inputs(32, 32)

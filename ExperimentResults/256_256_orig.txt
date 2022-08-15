@@ -1,0 +1,231 @@
+Using security parameter 40
+The following timing is inclusive preprocessing.
+Time = 1255.52 seconds 
+Data sent = 154765 MB in ~1046265 rounds (party 0)
+Global data sent = 309529 MB (all parties)
+This program might benefit from some protocol options.
+Consider adding the following at the beginning of 'quadratic_set_intersection.mpc':
+	program.use_edabit(True)
+, 77, 0, 79, 0, 80, 0, 0, 0, 0, 0, 0, 0, 0, 92, 0, 0, 95, 0, 0, 97, 0, 99, 0, 0, 0, 0, 0, 0, 107, 0, 108, 0, 0, 110, 0, 111, 0, 0, 0, 117, 0, 0, 119, 0, 123, 0, 0, 0, 0, 0, 0, 133, 0, 0, 139, 0, 140, 0, 0, 0, 0, 0, 0, 0, 0, 0, 150, 0, 151, 0, 0, 0, 155, 0, 156, 0, 0, 158, 0, 0, 0, 0, 164, 0, 166, 0, 0, 0, 0, 0, 0, 0, 0, 178, 0, 0, 0, 0, 185, 0, 190, 0, 0, 0, 0, 0, 0, 0, 0, 198, 0, 199, 0, 0, 0, 202, 0, 0, 0, 207, 0, 0, 0, 0, 212, 0, 0, 214, 0, 0, 217, 0, 218, 0, 222, 0, 223, 0, 224, 0, 0, 227, 0, 230, 0, 232, 0, 0, 0, 238, 0, 0, 240, 0, 0, 0, 244, 0, 0, 248, 0, 0, 0, 0, 0, 0, 0, 0, 258, 0, 0, 0, 264, 0, 265, 0, 0, 268, 0, 269, 0, 0, 273, 0, 0, 0, 277, 0, 0, 0, 0, 282, 0, 0, 0, 0, 0, 0, 290, 0, 0, 0, 293, 0, 294, 0, 295, 0, 296, 0, 300, 0, 0, 0, 0, 305, 0, 306, 0, 308, 0, 0, 0, 313, 0, 0, 0, 0, 0, 318, 0, 319, 0, 320, 0, 0, 0, 0, 0, 325, 0, 0, 0, 0, 0, 0, 334, 0, 0, 0, 339, 0, 342, 0, 0, 0, 0, 0, 0, 0, 354, 0, 356, 0, 0, 358, 0, 0, 0, 361, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 377, 0, 0, 379, 0, 381, 0, 383, 0, 0, 0, 388, 0, 0, 0, 392, 0, 393, 0, 0, 396, 0, 0, 0, 402, 0, 0, 0, 0, 0, 0, 409, 0, 411, 0, 0, 0, 414, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 425, 0, 0, 0, 0, 430, 0, 0, 433, 0, 434, 0, 436, 0, 0, 0, 440, 0, 0, 442, 0, 0, 0, 0, 0, 0, 450, 0, 0, 452, 0, 453, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 467, 0, 468, 0, 469, 0, 0, 471, 0, 0, 0, 0, 475, 0, 476, 0, 0, 480, 0, 0, 0, 484, 0, 0, 0, 0, 0, 490, 0, 491, 0, 492, 0, 493, 0, 496, 0, 0, 0, 0, 501, 0, 502, 0, 0, 0, 0, 0, 509, 0, 0, 0, 0, 
+The following timing is inclusive preprocessing.
+Time = 83.8584 seconds 
+Data sent = 8939.79 MB in ~14611 rounds (party 0)
+Global data sent = 17879.6 MB (all parties)
+This program might benefit from some protocol options.
+Consider adding the following at the beginning of 'merge_and_scan.mpc':
+	program.use_edabit(True)
+The following timing is inclusive preprocessing.
+Time = 558.796 seconds 
+Data sent = 70961.6 MB in ~71611 rounds (party 0)
+Global data sent = 141923 MB (all parties)
+This program might benefit from some protocol options.
+Consider adding the following at the beginning of 'merge_odd_even.mpc':
+	program.use_edabit(True)
+Using security parameter 40
+The following timing is inclusive preprocessing.
+Time = 3472.02 seconds 
+Data sent = 154765 MB in ~1046265 rounds (party 0)
+Global data sent = 309529 MB (all parties)
+This program might benefit from some protocol options.
+Consider adding the following at the beginning of 'quadratic_set_intersection.mpc':
+	program.use_edabit(True)
+Using security parameter 40
+The following timing is inclusive preprocessing.
+Time = 501.937 seconds 
+Data sent = 70961.6 MB in ~71611 rounds (party 0)
+Global data sent = 141923 MB (all parties)
+This program might benefit from some protocol options.
+Consider adding the following at the beginning of 'merge_odd_even.mpc':
+	program.use_edabit(True)
+Using security parameter 40
+The following timing is inclusive preprocessing.
+Time = 66.208 seconds 
+Data sent = 8939.78 MB in ~14609 rounds (party 0)
+Global data sent = 17879.6 MB (all parties)
+This program might benefit from some protocol options.
+Consider adding the following at the beginning of 'bitonic_merge.mpc':
+	program.use_edabit(True)
+Default bit length: 64
+Default security parameter: 40
+Compiling file /Users/abidahaque/MP-SPDZ/Programs/Source/quadratic_set_intersection.mpc
+Compiled 100000 lines at Thu Jul 28 17:36:26 2022
+WARNING: Order of memory instructions not preserved, errors possible
+Writing to /Users/abidahaque/MP-SPDZ/Programs/Schedules/quadratic_set_intersection.sch
+Writing to /Users/abidahaque/MP-SPDZ/Programs/Bytecode/quadratic_set_intersection-0.bc
+Program requires at most:
+         256 integer inputs from player 0
+         256 integer inputs from player 1
+     4754944 integer bits
+     2097152 integer triples
+      458754 virtual machine rounds
+Default bit length: 64
+Default security parameter: 40
+Compiling file /Users/abidahaque/MP-SPDZ/Programs/Source/merge_odd_even.mpc
+Compiled 100000 lines at Thu Jul 28 17:36:33 2022
+Compiled 200000 lines at Thu Jul 28 17:36:35 2022
+Compiled 300000 lines at Thu Jul 28 17:36:37 2022
+Compiled 400000 lines at Thu Jul 28 17:36:43 2022
+Compiled 500000 lines at Thu Jul 28 17:36:48 2022
+Compiled 600000 lines at Thu Jul 28 17:36:51 2022
+Compiled 700000 lines at Thu Jul 28 17:36:54 2022
+Compiled 800000 lines at Thu Jul 28 17:36:57 2022
+Compiled 900000 lines at Thu Jul 28 17:36:59 2022
+Compiled 1000000 lines at Thu Jul 28 17:37:01 2022
+Compiled 1100000 lines at Thu Jul 28 17:37:04 2022
+Compiled 1200000 lines at Thu Jul 28 17:37:06 2022
+Compiled 1300000 lines at Thu Jul 28 17:37:08 2022
+Compiled 1400000 lines at Thu Jul 28 17:37:11 2022
+WARNING: Order of memory instructions not preserved, errors possible
+WARNING: Order of memory instructions not preserved, errors possible
+WARNING: Order of memory instructions not preserved, errors possible
+WARNING: Order of memory instructions not preserved, errors possible
+WARNING: Order of memory instructions not preserved, errors possible
+WARNING: Order of memory instructions not preserved, errors possible
+WARNING: Order of memory instructions not preserved, errors possible
+WARNING: Order of memory instructions not preserved, errors possible
+WARNING: Order of memory instructions not preserved, errors possible
+WARNING: Order of memory instructions not preserved due to long vector, errors possible
+WARNING: Order of memory instructions not preserved, errors possible
+WARNING: Order of memory instructions not preserved, errors possible
+WARNING: Order of memory instructions not preserved due to long vector, errors possible
+WARNING: Order of memory instructions not preserved, errors possible
+WARNING: Order of memory instructions not preserved due to long vector, errors possible
+WARNING: Order of memory instructions not preserved due to long vector, errors possible
+WARNING: Order of memory instructions not preserved due to long vector, errors possible
+WARNING: Order of memory instructions not preserved due to long vector, errors possible
+WARNING: Order of memory instructions not preserved, errors possible
+WARNING: Order of memory instructions not preserved due to long vector, errors possible
+WARNING: Order of memory instructions not preserved due to long vector, errors possible
+WARNING: Order of memory instructions not preserved, errors possible
+Writing to /Users/abidahaque/MP-SPDZ/Programs/Schedules/merge_odd_even.sch
+Writing to /Users/abidahaque/MP-SPDZ/Programs/Bytecode/merge_odd_even-0.bc
+Program requires at most:
+         inf integer inputs from player 0
+         256 integer inputs from player 1
+      820079 integer bits
+      689061 integer triples
+         inf integer triples
+        3997 virtual machine rounds
+Default bit length: 64
+Default security parameter: 40
+Compiling file /Users/abidahaque/MP-SPDZ/Programs/Source/bitonic_merge.mpc
+Compiled 100000 lines at Thu Jul 28 17:38:21 2022
+Compiled 200000 lines at Thu Jul 28 17:42:10 2022
+Compiled 300000 lines at Thu Jul 28 17:42:12 2022
+Compiled 400000 lines at Thu Jul 28 17:42:14 2022
+Compiled 500000 lines at Thu Jul 28 17:42:16 2022
+Compiled 600000 lines at Thu Jul 28 17:42:19 2022
+Compiled 700000 lines at Thu Jul 28 17:42:24 2022
+Compiled 800000 lines at Thu Jul 28 17:42:27 2022
+Compiled 900000 lines at Thu Jul 28 17:42:32 2022
+Compiled 1000000 lines at Thu Jul 28 17:42:36 2022
+Compiled 1100000 lines at Thu Jul 28 17:42:41 2022
+Compiled 1200000 lines at Thu Jul 28 17:42:44 2022
+Compiled 1300000 lines at Thu Jul 28 17:42:48 2022
+Processed dependency of 1000000/1354269 instructions at Thu Jul 28 17:44:03 2022
+Merging instructions...
+Topological sort ...
+Done at Thu Jul 28 17:59:37 2022
+WARNING: Order of memory instructions not preserved, errors possible
+Allocating bitonic_merge-0--0, 1/2
+Allocated registers for 1000000 instructions at Thu Jul 28 17:59:57 2022
+Writing to /Users/abidahaque/MP-SPDZ/Programs/Schedules/bitonic_merge.sch
+Writing to /Users/abidahaque/MP-SPDZ/Programs/Bytecode/bitonic_merge-0.bc
+Program requires at most:
+         256 integer inputs from player 0
+         256 integer inputs from player 1
+      241336 integer bits
+      152288 integer triples
+        3642 virtual machine rounds
+Default bit length: 64
+Default security parameter: 40
+Compiling file /Users/abidahaque/MP-SPDZ/Programs/Source/quadratic_set_intersection.mpc
+Compiled 100000 lines at Fri Jul 29 09:20:44 2022
+WARNING: Order of memory instructions not preserved, errors possible
+Writing to /Users/abidahaque/MP-SPDZ/Programs/Schedules/quadratic_set_intersection.sch
+Writing to /Users/abidahaque/MP-SPDZ/Programs/Bytecode/quadratic_set_intersection-0.bc
+Program requires at most:
+         256 integer inputs from player 0
+         256 integer inputs from player 1
+     4754944 integer bits
+     2097152 integer triples
+      458754 virtual machine rounds
+Default bit length: 64
+Default security parameter: 40
+Compiling file /Users/abidahaque/MP-SPDZ/Programs/Source/merge_odd_even.mpc
+Compiled 100000 lines at Fri Jul 29 09:20:51 2022
+Compiled 200000 lines at Fri Jul 29 09:20:53 2022
+Compiled 300000 lines at Fri Jul 29 09:20:55 2022
+Compiled 400000 lines at Fri Jul 29 09:21:01 2022
+Compiled 500000 lines at Fri Jul 29 09:21:06 2022
+Compiled 600000 lines at Fri Jul 29 09:21:09 2022
+Compiled 700000 lines at Fri Jul 29 09:21:12 2022
+Compiled 800000 lines at Fri Jul 29 09:21:15 2022
+Compiled 900000 lines at Fri Jul 29 09:21:17 2022
+Compiled 1000000 lines at Fri Jul 29 09:21:19 2022
+Compiled 1100000 lines at Fri Jul 29 09:21:22 2022
+Compiled 1200000 lines at Fri Jul 29 09:21:24 2022
+Compiled 1300000 lines at Fri Jul 29 09:21:26 2022
+Compiled 1400000 lines at Fri Jul 29 09:21:29 2022
+WARNING: Order of memory instructions not preserved, errors possible
+WARNING: Order of memory instructions not preserved, errors possible
+WARNING: Order of memory instructions not preserved, errors possible
+WARNING: Order of memory instructions not preserved, errors possible
+WARNING: Order of memory instructions not preserved, errors possible
+WARNING: Order of memory instructions not preserved, errors possible
+WARNING: Order of memory instructions not preserved, errors possible
+WARNING: Order of memory instructions not preserved, errors possible
+WARNING: Order of memory instructions not preserved, errors possible
+WARNING: Order of memory instructions not preserved due to long vector, errors possible
+WARNING: Order of memory instructions not preserved, errors possible
+WARNING: Order of memory instructions not preserved, errors possible
+WARNING: Order of memory instructions not preserved due to long vector, errors possible
+WARNING: Order of memory instructions not preserved, errors possible
+WARNING: Order of memory instructions not preserved due to long vector, errors possible
+WARNING: Order of memory instructions not preserved due to long vector, errors possible
+WARNING: Order of memory instructions not preserved due to long vector, errors possible
+WARNING: Order of memory instructions not preserved due to long vector, errors possible
+WARNING: Order of memory instructions not preserved, errors possible
+WARNING: Order of memory instructions not preserved due to long vector, errors possible
+WARNING: Order of memory instructions not preserved due to long vector, errors possible
+WARNING: Order of memory instructions not preserved, errors possible
+Writing to /Users/abidahaque/MP-SPDZ/Programs/Schedules/merge_odd_even.sch
+Writing to /Users/abidahaque/MP-SPDZ/Programs/Bytecode/merge_odd_even-0.bc
+Program requires at most:
+         inf integer inputs from player 0
+         256 integer inputs from player 1
+      820079 integer bits
+      689061 integer triples
+         inf integer triples
+        3997 virtual machine rounds
+Default bit length: 64
+Default security parameter: 40
+Compiling file /Users/abidahaque/MP-SPDZ/Programs/Source/bitonic_merge.mpc
+Compiled 100000 lines at Fri Jul 29 09:22:40 2022
+Compiled 200000 lines at Fri Jul 29 09:22:42 2022
+Compiled 300000 lines at Fri Jul 29 09:22:44 2022
+Compiled 400000 lines at Fri Jul 29 09:22:46 2022
+Compiled 500000 lines at Fri Jul 29 09:22:48 2022
+Compiled 600000 lines at Fri Jul 29 09:22:50 2022
+Compiled 700000 lines at Fri Jul 29 09:22:52 2022
+Compiled 800000 lines at Fri Jul 29 09:22:54 2022
+Compiled 900000 lines at Fri Jul 29 09:22:56 2022
+Compiled 1000000 lines at Fri Jul 29 09:22:58 2022
+Compiled 1100000 lines at Fri Jul 29 09:23:01 2022
+Compiled 1200000 lines at Fri Jul 29 09:23:02 2022
+Compiled 1300000 lines at Fri Jul 29 09:23:04 2022
+Processed dependency of 1000000/1354269 instructions at Fri Jul 29 09:23:30 2022
+Merging instructions...
+Topological sort ...
+Done at Fri Jul 29 09:23:37 2022
+WARNING: Order of memory instructions not preserved, errors possible
+Allocating bitonic_merge-0--0, 1/2
+Allocated registers for 1000000 instructions at Fri Jul 29 09:23:56 2022
+Writing to /Users/abidahaque/MP-SPDZ/Programs/Schedules/bitonic_merge.sch
+Writing to /Users/abidahaque/MP-SPDZ/Programs/Bytecode/bitonic_merge-0.bc
+Program requires at most:
+         256 integer inputs from player 0
+         256 integer inputs from player 1
+      241336 integer bits
+      152288 integer triples
+        3642 virtual machine rounds

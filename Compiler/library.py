@@ -460,10 +460,6 @@ def method_block(function):
     return wrapper
 
 def cond_swap(x,y):
-    from .types import SubMultiArray
-    if isinstance(x, (Array, SubMultiArray)):
-        b = x[0] > y[0]
-        return list(zip(*[b.cond_swap(xx, yy) for xx, yy in zip(x, y)]))
     b = x < y
     if isinstance(x, sfloat):
         res = ([], [])
@@ -478,6 +474,8 @@ def cond_swap(x,y):
     bx = b * x
     by = b * y
     return bx + y - by, x - bx + by
+
+
 
 def sort(a):
     res = a
@@ -824,6 +822,247 @@ def loopy_odd_even_merge_sort(a, sorted_length=1, n_parallel=32,
                                 swap(m2, step)
                 steps[key] = step
             steps[key](l)
+   
+
+def quadraticcomps(n,m):
+    '''
+    
+
+    Parameters
+    ----------
+    n : length (a power of 2)
+    
+    Checks the indices to see if the XOR is off by the right amount
+    This yields the pairs we will eventually want to compare for bitonic merge
+    (in order)
+
+    Returns
+    -------
+    comp_tuples : a list of tuples
+
+    '''
+    quad_tup = [[i,j] for i in range(n) for j in range(m)]
+
+    return quad_tup
+ 
+            
+def bitoniccomps(n):
+    '''
+    
+
+    Parameters
+    ----------
+    n : length (a power of 2)
+    
+    Checks the indices to see if the XOR is off by the right amount
+    This yields the pairs we will eventually want to compare for bitonic merge
+    (in order)
+
+    Returns
+    -------
+    comp_tuples : a list of tuples
+
+    '''
+    numofbits = n.bit_length()-1
+    comp_tuples = []
+
+    powof2 = list(map(lambda x: 2**x, range(numofbits)))
+    
+    for k in powof2[::-1]:
+        for i in range(n-1):
+            for j in range(i+1, n):
+                if i^j == k:
+                    comp_tuples.append((i,j))
+
+    return comp_tuples
+
+def oemcomps(n):
+    '''
+    n needs to be a power of 2
+    This is JUST the merge, assuming the left/right sides are already sorted.
+    Should be on the order of n*lg(n), but has fewer than bitonic merge!
+    '''
+    indices = []
+    index_array = [i for i in range(n)]
+
+    if n>2:
+        evenseq = oemcomps(n//2, index_array[0:n-2+1:2])
+        oddseq = oemcomps(n//2, index_array[1:n-1+1:2])
+        indices_here = [(index_array[i],index_array[i+1]) for i in range(1,n-3+1)]
+        indices = indices+evenseq+oddseq+indices_here
+    else:
+        indices.append((index_array[0], index_array[1]))
+        
+    return indices
+
+
+
+def bitonicmerge(n, arr):
+    '''
+    Parameters
+    ----------
+    arr : array of a  length of power 2, with left/right already sorted
+    
+    returns sorted array
+
+    Returns
+    -------
+    arr : sorted array
+    
+    '''
+    
+    pairs = bitoniccomps(n)
+    
+    for i,j in pairs:
+        arr[i], arr[j] = cond_swap(arr[i], arr[j])
+    
+    return arr
+
+
+
+
+def bitonicmerge_uneven(n, m, arr):
+    '''
+    Parameters
+    ----------
+    arr : array of a  length of power 2, with left/right already sorted
+    
+    returns sorted array
+
+    Returns
+    -------
+    arr : sorted array
+    
+    '''
+    
+    max_val = (n+m).bit_length()
+    min_val = (n).bit_length()
+    
+    comp_tuples =  []
+    
+    for x in range(min_val, max_val):
+        z = 2**x
+        pairs = bitoniccomps(z)
+        
+        for i,j in pairs:
+            arr[i], arr[j] = cond_swap(arr[i], arr[j])
+
+    return arr
+
+
+
+            
+def bitoniccomps_multithread(n):
+    '''
+    
+
+    Parameters
+    ----------
+    n : length (a power of 2)
+    
+    Checks the indices to see if the XOR is off by the right amount
+    This yields the pairs we will eventually want to compare for bitonic merge
+    (in order)
+
+    Returns
+    -------
+    comp_tuples : a list of tuples
+
+    '''
+    numofbits = n.bit_length()-1
+    comp_tuples = []
+
+    powof2 = list(map(lambda x: 2**x, range(numofbits)))
+    
+    for k in powof2[::-1]:
+        comp_tuples = [(i,j) for i in range(n-1) for j in range(i+1, n) if i^j==k ]
+
+
+    return comp_tuples
+
+
+
+def bitonicmerge_multithread(n, arr):
+    '''
+    Parameters
+    ----------
+    arr : array of a  length of power 2, with left/right already sorted
+    
+    returns sorted array
+
+    Returns
+    -------
+    arr : sorted array
+    
+    '''
+    
+    pairs = bitoniccomps(n)
+    
+    for i,j in pairs:
+        arr[i], arr[j] = cond_swap(arr[i], arr[j])
+    
+    return arr
+
+def quadratic_psi(n,m, arr1, arr2):
+    '''
+    
+
+    Parameters
+    ----------
+    n : length arr1
+    m : length arr2
+    arr1: first set
+    arr2: second set
+    Returns
+    -------
+    matching items
+
+    '''
+    pairs = quadraticcomps(n, m)
+    
+    for i in range(n):
+        ind1 = pairs[i][0]
+        ind2 = pairs[i][1]
+
+    return quad_tup
+
+
+
+def merge(A, i_left, i_right, i_end):
+    B = Array(len(A), sint)
+    i0 = MemValue(i_left)
+    i1 = MemValue(i_right)
+    @for_range(i_left, i_end)
+    def loop(j):
+        if_then(and_(lambda: i0< i_right, or_(lambda: i1>=i_end, lambda:
+            regint(reveal(A[i0] <= A[i1])))))
+
+        B[j]= A[i0]
+        i0.iadd(1)
+        else_then()
+        B[j] = A[i1]
+        i1.iadd(1)
+        end_if()
+        
+    
+
+
+def merge(A, i_left, i_right, i_end):
+    B = Array(len(A), sint)
+    i0 = MemValue(i_left)
+    i1 = MemValue(i_right)
+    @for_range(i_left, i_end)
+    def loop(j):
+        if_then(and_(lambda: i0< i_right, or_(lambda: i1>=i_end, lambda:
+            regint(reveal(A[i0] <= A[i1])))))
+
+        B[j]= A[i0]
+        i0.iadd(1)
+        else_then()
+        B[j] = A[i1]
+        i1.iadd(1)
+        end_if()
+
 
 def mergesort(A):
     B = Array(len(A), sint)
@@ -878,7 +1117,7 @@ def range_loop(loop_body, start, stop=None, step=None):
         # known loop count
         if condition(start):
             get_tape().req_node.children[-1].aggregator = \
-                lambda x: int(ceil(((stop - start) / step))) * x[0]
+                lambda x: ((stop - start) // step) * x[0]
 
 def for_range(start, stop=None, step=None):
     """

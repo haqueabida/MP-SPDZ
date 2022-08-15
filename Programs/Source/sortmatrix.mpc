@@ -1,0 +1,35 @@
+print_ln('********************* Sort benchmark ********************')
+
+numrows =100
+list = Matrix(numrows,2,sint)
+
+@for_range_opt(numrows)
+def _(i):
+ list[i][0] = (sint)(numrows-i)%(2**64)
+#list[i][0] = sint.get_input_from(0)
+ list[i][1] = i
+
+print_ln("Before Sorting")
+
+@for_range_opt(numrows)
+def _(i):
+ print_ln("(%s,%s)",list[i][0].reveal(),list[i][1].reveal())
+
+#radix sort
+list.sort((0,))
+
+print_ln("After Sorting based on first column")
+
+
+@for_range_opt(numrows)
+def _(i):
+ print_ln("(%s,%s)",list[i][0].reveal(),list[i][1].reveal())
+
+list.sort((1,))
+
+print_ln("After Sorting based on second column")
+
+
+@for_range_opt(numrows)
+def _(i):
+ print_ln("(%s,%s)",list[i][0].reveal(),list[i][1].reveal())

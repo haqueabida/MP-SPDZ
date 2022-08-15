@@ -1,0 +1,241 @@
+
+
+605.073 seconds 
+76229.7 MB in ~507929 rounds (party 0)
+152459 MB (all parties)
+
+ 'quadratic_set_intersection.mpc':
+
+
+
+1206.15 seconds 
+164603 MB in ~152367 rounds (party 0)
+329206 MB (all parties)
+
+ 'merge_odd_even.mpc':
+
+
+
+240.281 seconds 
+31159 MB in ~40245 rounds (party 0)
+62318 MB (all parties)
+
+ 'bitonic_merge_uneven.mpc':
+
+
+
+609.201 seconds 
+76229.7 MB in ~507929 rounds (party 0)
+152459 MB (all parties)
+
+ 'quadratic_set_intersection.mpc':
+
+
+
+
+1121.67 seconds 
+164603 MB in ~152367 rounds (party 0)
+329206 MB (all parties)
+
+ 'merge_odd_even.mpc':
+
+
+
+236.59 seconds 
+31159 MB in ~40245 rounds (party 0)
+62318 MB (all parties)
+
+ 'bitonic_merge_uneven.mpc':
+
+
+
+618.797 seconds 
+76229.7 MB in ~507929 rounds (party 0)
+152459 MB (all parties)
+
+ 'quadratic_set_intersection.mpc':
+
+
+
+1195.99 seconds 
+164603 MB in ~152367 rounds (party 0)
+329206 MB (all parties)
+
+ 'merge_odd_even.mpc':
+
+
+
+233.263 seconds 
+31159 MB in ~40245 rounds (party 0)
+62318 MB (all parties)
+
+ 'bitonic_merge_uneven.mpc':
+
+
+
+603.59 seconds 
+76229.7 MB in ~507929 rounds (party 0)
+152459 MB (all parties)
+
+ 'quadratic_set_intersection.mpc':
+
+
+
+1180.68 seconds 
+164603 MB in ~152367 rounds (party 0)
+329206 MB (all parties)
+
+ 'merge_odd_even.mpc':
+
+
+
+244.802 seconds 
+31159 MB in ~40245 rounds (party 0)
+62318 MB (all parties)
+
+ 'bitonic_merge_uneven.mpc':
+
+
+
+604.515 seconds 
+76229.7 MB in ~507929 rounds (party 0)
+152459 MB (all parties)
+
+ 'quadratic_set_intersection.mpc':
+
+
+
+1181.23 seconds 
+164603 MB in ~152367 rounds (party 0)
+329206 MB (all parties)
+
+ 'merge_odd_even.mpc':
+
+
+
+230.788 seconds 
+31159 MB in ~40245 rounds (party 0)
+62318 MB (all parties)
+
+ 'bitonic_merge_uneven.mpc':
+
+
+
+606.094 seconds 
+76229.7 MB in ~507929 rounds (party 0)
+152459 MB (all parties)
+
+ 'quadratic_set_intersection.mpc':
+
+
+
+1195.96 seconds 
+164603 MB in ~152367 rounds (party 0)
+329206 MB (all parties)
+
+ 'merge_odd_even.mpc':
+
+
+
+235.433 seconds 
+31159 MB in ~40245 rounds (party 0)
+62318 MB (all parties)
+
+ 'bitonic_merge_uneven.mpc':
+
+
+
+600.596 seconds 
+76229.7 MB in ~507929 rounds (party 0)
+152459 MB (all parties)
+
+ 'quadratic_set_intersection.mpc':
+
+
+
+1184.91 seconds 
+164603 MB in ~152367 rounds (party 0)
+329206 MB (all parties)
+
+ 'merge_odd_even.mpc':
+
+
+
+237.4 seconds 
+31159 MB in ~40245 rounds (party 0)
+62318 MB (all parties)
+
+ 'bitonic_merge_uneven.mpc':
+
+
+
+597.579 seconds 
+76229.7 MB in ~507929 rounds (party 0)
+152459 MB (all parties)
+
+ 'quadratic_set_intersection.mpc':
+
+
+
+1178.14 seconds 
+164603 MB in ~152367 rounds (party 0)
+329206 MB (all parties)
+
+ 'merge_odd_even.mpc':
+
+
+
+229.967 seconds 
+31159 MB in ~40245 rounds (party 0)
+62318 MB (all parties)
+
+ 'bitonic_merge_uneven.mpc':
+
+
+
+597.466 seconds 
+76229.7 MB in ~507929 rounds (party 0)
+152459 MB (all parties)
+
+ 'quadratic_set_intersection.mpc':
+
+
+
+1189.26 seconds 
+164603 MB in ~152367 rounds (party 0)
+329206 MB (all parties)
+
+ 'merge_odd_even.mpc':
+
+
+
+233.464 seconds 
+31159 MB in ~40245 rounds (party 0)
+62318 MB (all parties)
+
+ 'bitonic_merge_uneven.mpc':
+
+
+
+593.744 seconds 
+76229.7 MB in ~507929 rounds (party 0)
+152459 MB (all parties)
+
+ 'quadratic_set_intersection.mpc':
+
+
+
+1191.86 seconds 
+164603 MB in ~152367 rounds (party 0)
+329206 MB (all parties)
+
+ 'merge_odd_even.mpc':
+
+
+
+235.971 seconds 
+31159 MB in ~40245 rounds (party 0)
+62318 MB (all parties)
+
+ 'bitonic_merge_uneven.mpc':
+

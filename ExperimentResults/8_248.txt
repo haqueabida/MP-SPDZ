@@ -1,0 +1,234 @@
+
+
+Time = 40.5657 seconds 
+Data sent = 5123.69 MB in ~32081 rounds (party 0)
+Global data sent = 10247.4 MB (all parties)
+
+'quadratic_set_intersection.mpc':
+
+
+
+Time = 212.96 seconds 
+Data sent = 30187.6 MB in ~36021 rounds (party 0)
+Global data sent = 60375.2 MB (all parties)
+
+'merge_odd_even.mpc':
+
+
+Time = 46.6722 seconds 
+Data sent = 6343.05 MB in ~9689 rounds (party 0)
+Global data sent = 12686.1 MB (all parties)
+
+'bitonic_merge_uneven.mpc':
+
+
+Time = 43.5501 seconds 
+Data sent = 5123.69 MB in ~32081 rounds (party 0)
+Global data sent = 10247.4 MB (all parties)
+
+'quadratic_set_intersection.mpc':
+
+
+
+Time = 211.326 seconds 
+Data sent = 30187.6 MB in ~36021 rounds (party 0)
+Global data sent = 60375.2 MB (all parties)
+
+'merge_odd_even.mpc':
+
+Time = 46.8832 seconds 
+Data sent = 6343.04 MB in ~9179 rounds (party 0)
+Global data sent = 12686.1 MB (all parties)
+
+'bitonic_merge_uneven.mpc':
+
+
+Time = 39.8333 seconds 
+Data sent = 5123.69 MB in ~32081 rounds (party 0)
+Global data sent = 10247.4 MB (all parties)
+
+'quadratic_set_intersection.mpc':
+
+
+
+Time = 208.466 seconds 
+Data sent = 30187.6 MB in ~36021 rounds (party 0)
+Global data sent = 60375.2 MB (all parties)
+
+'merge_odd_even.mpc':
+
+
+Time = 46.8456 seconds 
+Data sent = 6343.04 MB in ~9179 rounds (party 0)
+Global data sent = 12686.1 MB (all parties)
+
+'bitonic_merge_uneven.mpc':
+
+
+
+Time = 39.366 seconds 
+Data sent = 5123.69 MB in ~32081 rounds (party 0)
+Global data sent = 10247.4 MB (all parties)
+
+'quadratic_set_intersection.mpc':
+
+
+
+Time = 211.405 seconds 
+Data sent = 30187.6 MB in ~36021 rounds (party 0)
+Global data sent = 60375.2 MB (all parties)
+
+'merge_odd_even.mpc':
+
+
+
+Time = 46.2608 seconds 
+Data sent = 6343.04 MB in ~9179 rounds (party 0)
+Global data sent = 12686.1 MB (all parties)
+
+'bitonic_merge_uneven.mpc':
+
+
+
+Time = 39.0153 seconds 
+Data sent = 5123.69 MB in ~32081 rounds (party 0)
+Global data sent = 10247.4 MB (all parties)
+
+'quadratic_set_intersection.mpc':
+
+
+
+Time = 213.049 seconds 
+Data sent = 30187.6 MB in ~36021 rounds (party 0)
+Global data sent = 60375.2 MB (all parties)
+
+'merge_odd_even.mpc':
+
+
+
+Time = 47.2566 seconds 
+Data sent = 6343.04 MB in ~9179 rounds (party 0)
+Global data sent = 12686.1 MB (all parties)
+
+'bitonic_merge_uneven.mpc':
+
+
+
+Time = 48.2254 seconds 
+Data sent = 5123.69 MB in ~32081 rounds (party 0)
+Global data sent = 10247.4 MB (all parties)
+
+'quadratic_set_intersection.mpc':
+
+
+
+Time = 212.957 seconds 
+Data sent = 30187.6 MB in ~36021 rounds (party 0)
+Global data sent = 60375.2 MB (all parties)
+
+'merge_odd_even.mpc':
+
+
+
+Time = 47.4164 seconds 
+Data sent = 6343.04 MB in ~9179 rounds (party 0)
+Global data sent = 12686.1 MB (all parties)
+
+'bitonic_merge_uneven.mpc':
+
+
+
+Time = 43.4089 seconds 
+Data sent = 5123.69 MB in ~32081 rounds (party 0)
+Global data sent = 10247.4 MB (all parties)
+
+'quadratic_set_intersection.mpc':
+
+
+
+Time = 216.455 seconds 
+Data sent = 30187.6 MB in ~36021 rounds (party 0)
+Global data sent = 60375.2 MB (all parties)
+
+'merge_odd_even.mpc':
+
+
+
+Time = 56.4033 seconds 
+Data sent = 6343.04 MB in ~9179 rounds (party 0)
+Global data sent = 12686.1 MB (all parties)
+
+'bitonic_merge_uneven.mpc':
+
+
+
+Time = 40.434 seconds 
+Data sent = 5123.69 MB in ~32081 rounds (party 0)
+Global data sent = 10247.4 MB (all parties)
+
+'quadratic_set_intersection.mpc':
+
+
+
+Time = 216.402 seconds 
+Data sent = 30187.6 MB in ~36021 rounds (party 0)
+Global data sent = 60375.2 MB (all parties)
+
+'merge_odd_even.mpc':
+
+
+
+Time = 46.9682 seconds 
+Data sent = 6343.04 MB in ~9179 rounds (party 0)
+Global data sent = 12686.1 MB (all parties)
+
+'bitonic_merge_uneven.mpc':
+
+
+
+Time = 40.3382 seconds 
+Data sent = 5123.69 MB in ~32081 rounds (party 0)
+Global data sent = 10247.4 MB (all parties)
+
+'quadratic_set_intersection.mpc':
+
+
+
+Time = 217.005 seconds 
+Data sent = 30187.6 MB in ~36021 rounds (party 0)
+Global data sent = 60375.2 MB (all parties)
+
+'merge_odd_even.mpc':
+
+
+
+Time = 47.521 seconds 
+Data sent = 6343.04 MB in ~9179 rounds (party 0)
+Global data sent = 12686.1 MB (all parties)
+
+'bitonic_merge_uneven.mpc':
+
+
+
+Time = 39.9906 seconds 
+Data sent = 5123.69 MB in ~32081 rounds (party 0)
+Global data sent = 10247.4 MB (all parties)
+
+'quadratic_set_intersection.mpc':
+
+
+
+Time = 216.6 seconds 
+Data sent = 30187.6 MB in ~36021 rounds (party 0)
+Global data sent = 60375.2 MB (all parties)
+
+'merge_odd_even.mpc':
+
+
+
+Time = 47.7629 seconds 
+Data sent = 6343.04 MB in ~9179 rounds (party 0)
+Global data sent = 12686.1 MB (all parties)
+
+'bitonic_merge_uneven.mpc':
+

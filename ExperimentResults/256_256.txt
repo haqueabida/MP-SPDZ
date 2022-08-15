@@ -1,0 +1,431 @@
+
+
+Time = 1198.18 seconds 
+Data sent = 154765 MB in ~1046265 rounds (party 0)
+Global data sent = 309529 MB (all parties)
+
+'quadratic_set_intersection.mpc':
+
+
+
+Time = 502.673 seconds 
+Data sent = 70961.6 MB in ~71611 rounds (party 0)
+Global data sent = 141923 MB (all parties)
+ 'merge_odd_even.mpc':
+
+
+
+Time = 67.2101 seconds 
+Data sent = 8939.78 MB in ~14609 rounds (party 0)
+Global data sent = 17879.6 MB (all parties)
+
+'bitonic_merge.mpc':
+
+
+
+Time = 1194.92 seconds 
+Data sent = 154765 MB in ~1046265 rounds (party 0)
+Global data sent = 309529 MB (all parties)
+
+'quadratic_set_intersection.mpc':
+
+
+
+Time = 503.304 seconds 
+Data sent = 70961.6 MB in ~71611 rounds (party 0)
+Global data sent = 141923 MB (all parties)
+
+'merge_odd_even.mpc':
+
+
+
+Time = 69.1444 seconds 
+Data sent = 8939.78 MB in ~14609 rounds (party 0)
+Global data sent = 17879.6 MB (all parties)
+
+'bitonic_merge.mpc':
+
+
+
+Time = 1199.71 seconds 
+Data sent = 154765 MB in ~1046265 rounds (party 0)
+Global data sent = 309529 MB (all parties)
+
+'quadratic_set_intersection.mpc':
+
+
+
+Time = 499.218 seconds 
+Data sent = 70961.6 MB in ~71611 rounds (party 0)
+Global data sent = 141923 MB (all parties)
+
+'merge_odd_even.mpc':
+
+
+
+Time = 68.046 seconds 
+Data sent = 8939.78 MB in ~14609 rounds (party 0)
+Global data sent = 17879.6 MB (all parties)
+
+'bitonic_merge.mpc':
+
+
+
+Time = 1188.59 seconds 
+Data sent = 154765 MB in ~1046265 rounds (party 0)
+Global data sent = 309529 MB (all parties)
+
+'quadratic_set_intersection.mpc':
+
+
+
+Time = 498.327 seconds 
+Data sent = 70961.6 MB in ~71611 rounds (party 0)
+Global data sent = 141923 MB (all parties)
+
+'merge_odd_even.mpc':
+
+
+
+Time = 65.7899 seconds 
+Data sent = 8939.78 MB in ~14609 rounds (party 0)
+Global data sent = 17879.6 MB (all parties)
+
+'bitonic_merge.mpc':
+
+
+
+Time = 1186.05 seconds 
+Data sent = 154765 MB in ~1046265 rounds (party 0)
+Global data sent = 309529 MB (all parties)
+
+'quadratic_set_intersection.mpc':
+
+
+
+Time = 497.191 seconds 
+Data sent = 70961.6 MB in ~71611 rounds (party 0)
+Global data sent = 141923 MB (all parties)
+
+'merge_odd_even.mpc':
+
+
+
+Time = 69.4911 seconds 
+Data sent = 8939.78 MB in ~14609 rounds (party 0)
+Global data sent = 17879.6 MB (all parties)
+
+'bitonic_merge.mpc':
+
+
+
+Time = 1198.38 seconds 
+Data sent = 154765 MB in ~1046265 rounds (party 0)
+Global data sent = 309529 MB (all parties)
+
+'quadratic_set_intersection.mpc':
+
+
+
+Time = 506.29 seconds 
+Data sent = 70961.6 MB in ~71611 rounds (party 0)
+Global data sent = 141923 MB (all parties)
+
+'merge_odd_even.mpc':
+
+
+
+Time = 65.0034 seconds 
+Data sent = 8939.78 MB in ~14609 rounds (party 0)
+Global data sent = 17879.6 MB (all parties)
+
+'bitonic_merge.mpc':
+
+
+
+Time = 1202.88 seconds 
+Data sent = 154765 MB in ~1046265 rounds (party 0)
+Global data sent = 309529 MB (all parties)
+
+'quadratic_set_intersection.mpc':
+
+
+
+Time = 525.687 seconds 
+Data sent = 70961.6 MB in ~71611 rounds (party 0)
+Global data sent = 141923 MB (all parties)
+
+'merge_odd_even.mpc':
+
+
+
+Time = 66.446 seconds 
+Data sent = 8939.78 MB in ~14609 rounds (party 0)
+Global data sent = 17879.6 MB (all parties)
+
+'bitonic_merge.mpc':
+
+
+
+Time = 1173.53 seconds 
+Data sent = 154765 MB in ~1046265 rounds (party 0)
+Global data sent = 309529 MB (all parties)
+
+'quadratic_set_intersection.mpc':
+
+
+
+Time = 485.142 seconds 
+Data sent = 70961.6 MB in ~71611 rounds (party 0)
+Global data sent = 141923 MB (all parties)
+
+'merge_odd_even.mpc':
+
+
+
+Time = 64.3089 seconds 
+Data sent = 8939.78 MB in ~14609 rounds (party 0)
+Global data sent = 17879.6 MB (all parties)
+
+'bitonic_merge.mpc':
+
+
+
+Time = 1177.71 seconds 
+Data sent = 154765 MB in ~1046265 rounds (party 0)
+Global data sent = 309529 MB (all parties)
+
+'quadratic_set_intersection.mpc':
+
+
+
+Time = 505.236 seconds 
+Data sent = 70961.6 MB in ~71611 rounds (party 0)
+Global data sent = 141923 MB (all parties)
+
+'merge_odd_even.mpc':
+
+
+
+Time = 66.6872 seconds 
+Data sent = 8939.78 MB in ~14609 rounds (party 0)
+Global data sent = 17879.6 MB (all parties)
+
+'bitonic_merge.mpc':
+
+
+
+
+
+
+Time = 101.792 seconds 
+Data sent = 8939.78 MB in ~14609 rounds (party 0)
+Global data sent = 17879.6 MB (all parties)
+
+'bitonic_merge.mpc':
+
+
+Time = 628.038 seconds 
+Data sent = 70961.6 MB in ~71611 rounds (party 0)
+Global data sent = 141923 MB (all parties)
+
+'merge_odd_even.mpc':
+
+
+Time = 1418.44 seconds 
+Data sent = 154765 MB in ~1046265 rounds (party 0)
+Global data sent = 309529 MB (all parties)
+
+'quadratic_set_intersection.mpc':
+
+
+Time = 1421.35 seconds 
+Data sent = 154765 MB in ~1046265 rounds (party 0)
+Global data sent = 309529 MB (all parties)
+
+'quadratic_set_intersection.mpc':
+
+
+
+Time = 500.689 seconds 
+Data sent = 70961.6 MB in ~71611 rounds (party 0)
+Global data sent = 141923 MB (all parties)
+
+'merge_odd_even.mpc':
+
+
+
+Time = 67.0066 seconds 
+Data sent = 8939.78 MB in ~14609 rounds (party 0)
+Global data sent = 17879.6 MB (all parties)
+
+'bitonic_merge.mpc':
+
+Default bit length: 64
+Default security parameter: 40
+Compiling file /Users/abidahaque/MP-SPDZ/Programs/Source/quadratic_set_intersection.mpc
+WARNING: Order of memory instructions not preserved, errors possible
+Writing to /Users/abidahaque/MP-SPDZ/Programs/Schedules/quadratic_set_intersection.sch
+Writing to /Users/abidahaque/MP-SPDZ/Programs/Bytecode/quadratic_set_intersection-0.bc
+Program requires at most:
+         128 integer inputs from player 0
+         128 integer inputs from player 1
+     1197824 integer bits
+      524288 integer triples
+      114690 virtual machine rounds
+Default bit length: 64
+Default security parameter: 40
+Compiling file /Users/abidahaque/MP-SPDZ/Programs/Source/merge_odd_even.mpc
+Compiled 100000 lines at Mon Aug  1 08:43:53 2022
+Compiled 200000 lines at Mon Aug  1 08:43:56 2022
+Compiled 300000 lines at Mon Aug  1 08:43:59 2022
+Compiled 400000 lines at Mon Aug  1 08:44:02 2022
+Compiled 500000 lines at Mon Aug  1 08:44:04 2022
+Compiled 600000 lines at Mon Aug  1 08:44:07 2022
+WARNING: Order of memory instructions not preserved, errors possible
+WARNING: Order of memory instructions not preserved, errors possible
+WARNING: Order of memory instructions not preserved, errors possible
+WARNING: Order of memory instructions not preserved, errors possible
+WARNING: Order of memory instructions not preserved, errors possible
+WARNING: Order of memory instructions not preserved, errors possible
+WARNING: Order of memory instructions not preserved, errors possible
+WARNING: Order of memory instructions not preserved, errors possible
+WARNING: Order of memory instructions not preserved due to long vector, errors possible
+WARNING: Order of memory instructions not preserved, errors possible
+WARNING: Order of memory instructions not preserved, errors possible
+WARNING: Order of memory instructions not preserved due to long vector, errors possible
+WARNING: Order of memory instructions not preserved, errors possible
+WARNING: Order of memory instructions not preserved due to long vector, errors possible
+WARNING: Order of memory instructions not preserved due to long vector, errors possible
+WARNING: Order of memory instructions not preserved due to long vector, errors possible
+WARNING: Order of memory instructions not preserved due to long vector, errors possible
+WARNING: Order of memory instructions not preserved, errors possible
+WARNING: Order of memory instructions not preserved due to long vector, errors possible
+WARNING: Order of memory instructions not preserved due to long vector, errors possible
+WARNING: Order of memory instructions not preserved, errors possible
+Writing to /Users/abidahaque/MP-SPDZ/Programs/Schedules/merge_odd_even.sch
+Writing to /Users/abidahaque/MP-SPDZ/Programs/Bytecode/merge_odd_even-0.bc
+Program requires at most:
+         inf integer inputs from player 0
+         128 integer inputs from player 1
+      335215 integer bits
+      284069 integer triples
+         inf integer triples
+        2142 virtual machine rounds
+Default bit length: 64
+Default security parameter: 40
+Compiling file /Users/abidahaque/MP-SPDZ/Programs/Source/bitonic_merge.mpc
+Compiled 100000 lines at Mon Aug  1 08:44:39 2022
+Compiled 200000 lines at Mon Aug  1 08:44:41 2022
+Compiled 300000 lines at Mon Aug  1 08:44:43 2022
+Compiled 400000 lines at Mon Aug  1 08:44:45 2022
+Compiled 500000 lines at Mon Aug  1 08:44:47 2022
+Compiled 600000 lines at Mon Aug  1 08:44:49 2022
+Compiled 700000 lines at Mon Aug  1 08:44:52 2022
+Compiled 800000 lines at Mon Aug  1 08:44:53 2022
+Compiled 900000 lines at Mon Aug  1 08:44:56 2022
+Compiled 1000000 lines at Mon Aug  1 08:44:57 2022
+Compiled 1100000 lines at Mon Aug  1 08:45:00 2022
+Compiled 1200000 lines at Mon Aug  1 08:45:02 2022
+Compiled 1300000 lines at Mon Aug  1 08:45:03 2022
+Processed dependency of 1000000/1354269 instructions at Mon Aug  1 08:45:28 2022
+Merging instructions...
+Topological sort ...
+Done at Mon Aug  1 08:45:35 2022
+WARNING: Order of memory instructions not preserved, errors possible
+Allocating bitonic_merge-0--0, 1/2
+Allocated registers for 1000000 instructions at Mon Aug  1 08:45:54 2022
+Writing to /Users/abidahaque/MP-SPDZ/Programs/Schedules/bitonic_merge.sch
+Writing to /Users/abidahaque/MP-SPDZ/Programs/Bytecode/bitonic_merge-0.bc
+Program requires at most:
+         256 integer inputs from player 0
+         256 integer inputs from player 1
+      241336 integer bits
+      152288 integer triples
+        3642 virtual machine rounds
+Using security parameter 40
+Binding to socket on abidahaque-mbp:15529 failed (Address already in use), trying again in a second ...
+Binding to socket on abidahaque-mbp:15529 failed (Address already in use), trying again in a second ...
+Binding to socket on abidahaque-mbp:15529 failed (Address already in use), trying again in a second ...
+Using security parameter 40
+Binding to socket on abidahaque-mbp:15529 failed (Address already in use), trying again in a second ...
+Using security parameter 40
+Binding to socket on abidahaque-mbp:15529 failed (Address already in use), trying again in a second ...
+Binding to socket on abidahaque-mbp:15529 failed (Address already in use), trying again in a second ...
+111 154 203 257 298 309 319 338 505 506 507 508 509 510 511 512 Significant amount of unused triples of SPDZ gfp. For more accurate benchmarks, consider reducing the batch size with -b.
+The following timing is inclusive preprocessing.
+Time = 1.93131 seconds 
+Data sent = 201.131 MB in ~487 rounds (party 0)
+Global data sent = 402.263 MB (all parties)
+This program might benefit from some protocol options.
+Consider adding the following at the beginning of 'bitonic_merge.mpc':
+	program.use_edabit(True)
+Binding to socket on abidahaque-mbp:15529 failed (Address already in use), trying again in a second ...
+Binding to socket on abidahaque-mbp:15529 failed (Address already in use), trying again in a second ...
+Binding to socket on abidahaque-mbp:15529 failed (Address already in use), trying again in a second ...
+Binding to socket on abidahaque-mbp:15529 failed (Address already in use), trying again in a second ...
+Binding to socket on abidahaque-mbp:15529 failed (Address already in use), trying again in a second ...
+Binding to socket on abidahaque-mbp:15529 failed (Address already in use), trying again in a second ...
+Binding to socket on abidahaque-mbp:15529 failed (Address already in use), trying again in a second ...
+Binding to socket on abidahaque-mbp:15529 failed (Address already in use), trying again in a second ...
+Binding to socket on abidahaque-mbp:15529 failed (Address already in use), trying again in a second ...
+Binding to socket on abidahaque-mbp:15529 failed (Address already in use), trying again in a second ...
+Binding to socket on abidahaque-mbp:15529 failed (Address already in use), trying again in a second ...
+Binding to socket on abidahaque-mbp:15529 failed (Address already in use), trying again in a second ...
+Binding to socket on abidahaque-mbp:15529 failed (Address already in use), trying again in a second ...
+Binding to socket on abidahaque-mbp:15529 failed (Address already in use), trying again in a second ...
+Binding to socket on abidahaque-mbp:15529 failed (Address already in use), trying again in a second ...
+Binding to socket on abidahaque-mbp:15529 failed (Address already in use), trying again in a second ...
+Binding to socket on abidahaque-mbp:15529 failed (Address already in use), trying again in a second ...
+Binding to socket on abidahaque-mbp:15529 failed (Address already in use), trying again in a second ...
+Binding to socket on abidahaque-mbp:15529 failed (Address already in use), trying again in a second ...
+Binding to socket on abidahaque-mbp:15529 failed (Address already in use), trying again in a second ...
+Binding to socket on abidahaque-mbp:15529 failed (Address already in use), trying again in a second ...
+Binding to socket on abidahaque-mbp:15529 failed (Address already in use), trying again in a second ...
+Binding to socket on abidahaque-mbp:15529 failed (Address already in use), trying again in a second ...
+Binding to socket on abidahaque-mbp:15529 failed (Address already in use), trying again in a second ...
+Binding to socket on abidahaque-mbp:15529 failed (Address already in use), trying again in a second ...
+Binding to socket on abidahaque-mbp:15529 failed (Address already in use), trying again in a second ...
+Binding to socket on abidahaque-mbp:15529 failed (Address already in use), trying again in a second ...
+Binding to socket on abidahaque-mbp:15529 failed (Address already in use), trying again in a second ...
+Binding to socket on abidahaque-mbp:15529 failed (Address already in use), trying again in a second ...
+Binding to socket on abidahaque-mbp:15529 failed (Address already in use), trying again in a second ...
+Binding to socket on abidahaque-mbp:15529 failed (Address already in use), trying again in a second ...
+Binding to socket on abidahaque-mbp:15529 failed (Address already in use), trying again in a second ...
+Binding to socket on abidahaque-mbp:15529 failed (Address already in use), trying again in a second ...
+Binding to socket on abidahaque-mbp:15529 failed (Address already in use), trying again in a second ...
+Binding to socket on abidahaque-mbp:15529 failed (Address already in use), trying again in a second ...
+Binding to socket on abidahaque-mbp:15529 failed (Address already in use), trying again in a second ...
+Binding to socket on abidahaque-mbp:15529 failed (Address already in use), trying again in a second ...
+Binding to socket on abidahaque-mbp:15529 failed (Address already in use), trying again in a second ...
+Binding to socket on abidahaque-mbp:15529 failed (Address already in use), trying again in a second ...
+Binding to socket on abidahaque-mbp:15529 failed (Address already in use), trying again in a second ...
+Binding to socket on abidahaque-mbp:15529 failed (Address already in use), trying again in a second ...
+Binding to socket on abidahaque-mbp:15529 failed (Address already in use), trying again in a second ...
+Binding to socket on abidahaque-mbp:15529 failed (Address already in use), trying again in a second ...
+Binding to socket on abidahaque-mbp:15529 failed (Address already in use), trying again in a second ...
+Binding to socket on abidahaque-mbp:15529 failed (Address already in use), trying again in a second ...
+Binding to socket on abidahaque-mbp:15529 failed (Address already in use), trying again in a second ...
+Binding to socket on abidahaque-mbp:15529 failed (Address already in use), trying again in a second ...
+Binding to socket on abidahaque-mbp:15529 failed (Address already in use), trying again in a second ...
+Binding to socket on abidahaque-mbp:15529 failed (Address already in use), trying again in a second ...
+Binding to socket on abidahaque-mbp:15529 failed (Address already in use), trying again in a second ...
+Binding to socket on abidahaque-mbp:15529 failed (Address already in use), trying again in a second ...
+Binding to socket on abidahaque-mbp:15529 failed (Address already in use), trying again in a second ...
+Binding to socket on abidahaque-mbp:15529 failed (Address already in use), trying again in a second ...
+Binding to socket on abidahaque-mbp:15529 failed (Address already in use), trying again in a second ...
+Binding to socket on abidahaque-mbp:15529 failed (Address already in use), trying again in a second ...
+Binding to socket on abidahaque-mbp:15529 failed (Address already in use), trying again in a second ...
+Binding to socket on abidahaque-mbp:15529 failed (Address already in use), trying again in a second ...
+Binding to socket on abidahaque-mbp:15529 failed (Address already in use), trying again in a second ...
+Binding to socket on abidahaque-mbp:15529 failed (Address already in use), trying again in a second ...
+Binding to socket on abidahaque-mbp:15529 failed (Address already in use), trying again in a second ...
+Binding to socket on abidahaque-mbp:15529 failed (Address already in use), trying again in a second ...
+libc++abi: terminating with uncaught exception of type std::runtime_error: error in network setup: abidahaque-mbp : Unavailable too many times : Resource temporarily unavailable
+The following timing is inclusive preprocessing.
+Time = 504.885 seconds 
+Data sent = 70961.6 MB in ~71611 rounds (party 0)
+Global data sent = 141923 MB (all parties)
+This program might benefit from some protocol options.
+Consider adding the following at the beginning of 'merge_odd_even.mpc':
+	program.use_edabit(True)
