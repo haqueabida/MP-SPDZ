@@ -15,11 +15,16 @@ def merge_intersection(combo):
 
     combo.sort(batcher=True)
             
- 
-    @for_range(N-1)
-    def _(i):
-        match = cs[i] == cs[i+1]
-        intersection[i] = if_else(match, cs[i], intersection[i])
+    
+    is_match_B = combo.get_vector(base=1)
+    is_match_A = combo.get_vector(size=N-1)
+    
+    
+    matches = Array(N, sint)
+    
+    matches.assign_part_vector(is_match_B==is_match_A, base=1)
+    
+    intersection.assign_vector(matches*combo)
 
     return intersection
     
@@ -35,6 +40,13 @@ def set_intersection_inputs(n, m):
         combo[i+n] = sfix.get_input_from(1)
 
     intersection = merge_intersection(combo)
+    
+
+    @for_range(n+m)
+    def _(i):
+        print_str('%s, ', intersection[i].reveal())
+        
+    print_ln('\n')
 
 
-set_intersection_inputs(512, 512)
+set_intersection_inputs(128,128)

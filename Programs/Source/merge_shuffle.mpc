@@ -35,11 +35,18 @@ def merge_and_shuffle(combo):
     all_zeros[2] = 0
     
     
-    # all_match = Matrix(N, 3, sint)
+    all_match = Matrix(N, 3, sint)
+    all_match.set_column(0, combo.get_column(0))
+    all_match.set_column(1, combo.get_column(1))
     
-    # all_match[::][0:2].assign_vector(combo[::][0:2])
-    # all_match[1::][2].assign_vector(combo[0::][2])
+    
+    all_match.set_column(2,combo.get_column(2).get_vector(base=1) )
 
+    
+    
+    is_match_B = combo.get_column(0).get_vector(base=1)
+    is_match_A = combo.get_column(0).get_vector()
+    
 
     #loops through each element, if it matches, then will create a row
     #for B with the match key. Otherwise if the element is from B, we keep it.
@@ -48,9 +55,8 @@ def merge_and_shuffle(combo):
     def _(i):
         match = combo[i][0] == combo[i+1][0]
         @if_e(match)
-        def _():
-            
-            intersection[i+1].assign_vector([combo[i+1][0], 1, combo[i][2]])
+        def _():     
+            intersection[i+1].assign_vector(all_match[i+1])
         @else_
         def _():
             #takes on the B value tho no match, if it's from B. otherwise 0s
