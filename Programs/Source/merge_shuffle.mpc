@@ -129,13 +129,26 @@ def shuffled_intersection_inputs(n, m):
 
     shuf_int = merge_and_shuffle(combo)
     
+
+    @for_range(n+m)
+    def _(i):
+        print_str('%s: %s, ', shuf_int[i][0].reveal(), shuf_int[i][2].reveal())
+
+    print_ln('**** \n')
+
+
+
+
+
     matches_only = filter_dummies(shuf_int, n, m)
+
+
+
 
      
     @for_range(n)
     def _(i):
         print_str('%s: %s, ', matches_only[i][0].reveal(), matches_only[i][1].reveal())
-#        print_str('%s, ', matches_only[i].reveal())  
 
     print_ln('\n')
         
