@@ -5,12 +5,12 @@ import numpy as np
 
 
 
-numrows= 32 #change this to add entries
+numrows= 16 #change this to add entries
 #datamod=numrows*2
-datamod = 48
+datamod = 32
 
-setsize0 = 32
-setsize1 = 32
+setsize0 = 8
+setsize1 = 8
 
 path=os.getcwd()
 path=path+'/Player-Data/Input-P0-0' #file gets created in Player-Data folder

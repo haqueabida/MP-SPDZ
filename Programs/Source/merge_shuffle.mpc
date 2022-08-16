@@ -4,6 +4,7 @@ from Compiler import library
 
 program.bit_length = 32
 
+
 def merge_and_shuffle(combo):
     """ Merges two databases A and B, which are concatenated within combo
     then does a loop to find matches,
@@ -35,12 +36,8 @@ def merge_and_shuffle(combo):
     all_zeros[2] = 0
     
     
-    all_match = Matrix(N, 3, sint)
-    all_match.set_column(0, combo.get_column(0))
-    all_match.set_column(1, combo.get_column(1))
+    all_match = Array(3, sint)
     
-    
-    all_match.set_column(2,combo.get_column(2).get_vector(base=1) )
 
     
     #check the 0th element    
@@ -56,7 +53,13 @@ def merge_and_shuffle(combo):
     def _(i):
         match = combo[i][0] == combo[i+1][0]
     
-        intersection[i+1] = if_else(match, all_match[i+1].get_vector(), if_else(combo[i+1][1]==1, combo[i+1].get_vector(), all_zeros.get_vector()))
+        all_match[0] = combo[i][0]
+        all_match[1] = 1
+        all_match[2] = combo[i][2]
+        
+        intersection[i+1] = if_else(match, all_match.get_vector(), 
+                                    if_else(combo[i+1][1]==1, combo[i+1].get_vector(), 
+                                            all_zeros.get_vector()))
                 
 
     #shuffle to remove any knowledge about the order of matches
@@ -71,24 +74,38 @@ def merge_and_shuffle(combo):
     return intersection
     
     
-def filter_dummies(arr, A_size, B_size):
+def filter_dummies(arr, A_size, B_size, j=0):
     """
     Removes the elements that are dummies, 
     i.e. those that are marked with 0
     In this case we know a-priori how many elements are 0/1
+    arr has the elements and the distinguisher
     """
     
-    N = len(arr)
     
     distinguished = Matrix(B_size, 2, sint)
     
-    @for_range(N)
-    def _(i):
-        if (arr[i][1].reveal()==0):
-            distinguished[i][0] = arr[i][0]
-            distinguished[i][1] = arr[i][2]
-            
+    keep_vec = Array(A_size+B_size, cint)
+    keys_vec = Array(A_size+B_size, sint)
+    values_vec = Array(A_size+B_size, sint)
+    
+    
+    keep_vec.assign_vector((arr.get_column(1).reveal()).get_vector())
+    keys_vec.assign_vector(arr.get_column(0).get_vector())
+    values_vec.assign_vector((arr.get_column(2)).get_vector())
+    
+    j = MemValue(0)
+    for i in range(A_size+B_size):  
+        @if_(keep_vec[i]!=0)
+        def _():
+            distinguished[j][0] = keys_vec[i]
+            distinguished[j][1] = values_vec[i]
+            j.iadd(1)
+     
+
+
     return distinguished
+            
             
     
 
@@ -112,17 +129,15 @@ def shuffled_intersection_inputs(n, m):
 
     shuf_int = merge_and_shuffle(combo)
     
-    @for_range(n+m)
+    matches_only = filter_dummies(shuf_int, n, m)
+
+     
+    @for_range(n)
     def _(i):
-        print_str('%s, ', shuf_int[i][0].reveal())
-        
-    print_ln('******')
-    
-    
-    
-    @for_range(n+m)
-    def _(i):
-        print_str('%s, ', shuf_int[i][2].reveal())
+        print_str('%s: %s, ', matches_only[i][0].reveal(), matches_only[i][1].reveal())
+#        print_str('%s, ', matches_only[i].reveal())  
+
+    print_ln('\n')
         
 
-shuffled_intersection_inputs(16,16)
+shuffled_intersection_inputs(8,8)
