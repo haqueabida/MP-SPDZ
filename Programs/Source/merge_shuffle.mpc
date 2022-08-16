@@ -43,30 +43,22 @@ def merge_and_shuffle(combo):
     all_match.set_column(2,combo.get_column(2).get_vector(base=1) )
 
     
+    #check the 0th element    
+    intersection[0] = if_else(combo[0][1]==1,  combo[0].get_vector(), all_zeros.get_vector())
     
-    is_match_B = combo.get_column(0).get_vector(base=1)
-    is_match_A = combo.get_column(0).get_vector()
-    
+
 
     #loops through each element, if it matches, then will create a row
     #for B with the match key. Otherwise if the element is from B, we keep it.
     #But if the element is from A, we set it to all 0s.
+    
     @for_range(N-1)
     def _(i):
         match = combo[i][0] == combo[i+1][0]
-        @if_e(match)
-        def _():     
-            intersection[i+1].assign_vector(all_match[i+1])
-        @else_
-        def _():
-            #takes on the B value tho no match, if it's from B. otherwise 0s
-            if_else(combo[i+1][1]==1, intersection[i].assign_vector(combo[i+1]), intersection[i].assign_vector(all_zeros))
-
-                
-        #check the 0th element    
-    if_else(combo[0][1]==1, intersection[0].assign_vector(combo[0]), intersection[0].assign_vector(all_zeros))
-                    
     
+        intersection[i+1] = if_else(match, all_match[i+1].get_vector(), if_else(combo[i+1][1]==1, combo[i+1].get_vector(), all_zeros.get_vector()))
+                
+
     #shuffle to remove any knowledge about the order of matches
     intersection.secure_shuffle()
     
@@ -109,7 +101,7 @@ def shuffled_intersection_inputs(n, m):
     def _(i):
         combo[i][0] = sfix.get_input_from(0)
         combo[i][1] = 0
-        combo[i][2] = i #want this to be the match key but don't know how to take input
+        combo[i][2] = i+1 # the match key, for now
     @for_range_opt(m)
     def _(i):
         combo[i+n][0] = sfix.get_input_from(1)
@@ -130,7 +122,7 @@ def shuffled_intersection_inputs(n, m):
     
     @for_range(n+m)
     def _(i):
-        print_str('%s, ', shuf_int[i][1].reveal())
+        print_str('%s, ', shuf_int[i][2].reveal())
         
 
-shuffled_intersection_inputs(32, 32)
+shuffled_intersection_inputs(16,16)
