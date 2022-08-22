@@ -283,6 +283,10 @@ void BaseInstruction::parse_operands(istream& s, int pos, int file_pos)
         n = get_int(s);
         get_vector(2, start, s);
         break;
+      // instructions with 2 register operands
+      case INVPERM:
+          get_vector(2, start, s);
+          break;
       // open instructions + read/write instructions with variable length args
       case OPEN:
       case GOPEN:
@@ -505,9 +509,12 @@ bool Instruction::get_offline_data_usage(DataPositions& usage)
     case USE_INP:
       if (r[0] >= N_DATA_FIELD_TYPE)
         throw invalid_program();
-      if ((unsigned)r[1] >= usage.inputs.size())
-        throw Processor_Error("Player number too high");
-      usage.inputs[r[1]][r[0]] = n;
+      if (usage.inputs.size() != 1)
+        {
+          if ((unsigned) r[1] >= usage.inputs.size())
+            throw Processor_Error("Player number too high");
+          usage.inputs[r[1]][r[0]] = n;
+        }
       return int(n) >= 0;
     case USE_EDABIT:
       usage.edabits[{r[0], r[1]}] = n;
@@ -1075,6 +1082,9 @@ inline void Instruction::execute(Processor<sint, sgf2n>& Proc) const
         return;
       case DELSHUFFLE:
         Proc.Procp.delete_shuffle(Proc.read_Ci(r[0]));
+        return;
+      case INVPERM:
+        Proc.Procp.inverse_permutation(*this);
         return;
       case CHECK:
         {
