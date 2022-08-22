@@ -1,0 +1,52 @@
+import util
+from util import if_else
+from Compiler import library
+
+program.bit_length = 32
+
+def merge_intersection(combo):
+    """ Merge-and-scan style private set intersection
+
+    Returns: secret Array with intersection value if the element matches,
+            and a 0 where the elements do not match
+    """
+    N = len(combo)
+    intersection = Array(N, sint)
+
+    combo.sort(batcher=True)
+            
+    
+    is_match_B = combo.get_vector(base=1)
+    is_match_A = combo.get_vector(size=N-1)
+    
+    
+    matches = Array(N, sint)
+    
+    matches.assign_part_vector(is_match_B==is_match_A, base=1)
+    
+    intersection.assign_vector(matches*combo)
+
+    return intersection
+    
+
+def set_intersection_inputs(n, m):
+    combo = Array(n+m, sint)
+
+    @for_range_opt(n)
+    def _(i):
+        combo[i] = sfix.get_input_from(0)
+    @for_range_opt(m)
+    def _(i):
+        combo[i+n] = sfix.get_input_from(1)
+
+    intersection = merge_intersection(combo)
+    
+
+    @for_range(n+m)
+    def _(i):
+        print_str('%s, ', intersection[i].reveal())
+        
+    print_ln('\n')
+
+
+set_intersection_inputs(128,128)

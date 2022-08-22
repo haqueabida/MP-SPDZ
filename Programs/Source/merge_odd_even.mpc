@@ -1,0 +1,40 @@
+import util
+from util import if_else
+from Compiler import types, library
+from Compiler.types import sint, Matrix, Array
+
+program.bit_length = 32
+
+def merge_intersection(combo):
+    """ Sorts the lists using odd-even merge-sort
+
+    Returns: secret Array with intersection value if the element matches,
+            and a 0 where the elements do not match
+    """
+    N = len(combo)
+    intersection = Array(N, sint)
+    
+    combo.sort(batcher=True)
+    
+    @for_range(N-1)
+    def _(i):
+        match = combo[i] == combo[i+1]
+        intersection[i] = if_else(match, combo[i], intersection[i])
+
+    return intersection
+    
+
+def set_intersection_inputs(n, m):
+    combo = Array(n+m, sint)
+
+    @for_range_opt(n)
+    def _(i):
+        combo[i] = sfix.get_input_from(0)
+    @for_range_opt(m)
+    def _(i):
+        combo[i+n] = sfix.get_input_from(1)
+
+    intersection = merge_intersection(combo)
+
+
+set_intersection_inputs(512,512)

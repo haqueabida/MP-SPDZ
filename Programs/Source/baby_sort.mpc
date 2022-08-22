@@ -1,0 +1,13 @@
+print_ln('********** baby sort ***********')
+
+matchkeys = Array(2, sint)
+
+@for_range_opt(2)
+def _(i):
+	matchkeys[i] = sint.get_input_from(i)
+
+matchkeys.sort()
+
+@for_range_opt(2)
+def _(i):
+	print_ln('%s element is %s', i, matchkeys[i].reveal())

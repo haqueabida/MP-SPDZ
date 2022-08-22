@@ -1,0 +1,156 @@
+import util
+from util import if_else
+from Compiler import library
+
+program.bit_length = 32
+
+
+def merge_and_shuffle(combo):
+    """ Merges two databases A and B, which are concatenated within combo
+    then does a loop to find matches,
+    shuffles
+    then returns only the elements of B that matched
+    like a LEFT-JOIN on B
+    
+    Assume that the columns of A are ID, in_set_B = 0 , match-key = mk
+    Assume that the columns of B are ID, in_set_B = 1, match-key = 0
+    
+    If the ID matches, we return ID, in_set_B=1, match-key = mk
+    (although technically the middle column is not needed to return, this
+     is irrelevant either way)
+    """
+    N = len(combo)
+    intersection = Matrix(N, 3, sint)
+
+
+    #Sort -- works as a merge of A, B within combo
+    #Assume that the elements of A come before B,
+    #i.e., we are matching first on ID, then by in_set_B
+    #sort() with Batcher doesn't work
+    combo.sort()
+    
+    
+    all_zeros = Array(3, sint)
+    all_zeros[0] = 0
+    all_zeros[1] = 0
+    all_zeros[2] = 0
+    
+    
+    all_match = Array(3, sint)
+    
+
+    
+    #check the 0th element    
+    intersection[0] = if_else(combo[0][1]==1,  combo[0].get_vector(), all_zeros.get_vector())
+    
+
+
+    #loops through each element, if it matches, then will create a row
+    #for B with the match key. Otherwise if the element is from B, we keep it.
+    #But if the element is from A, we set it to all 0s.
+    
+    @for_range(N-1)
+    def _(i):
+        match = combo[i][0] == combo[i+1][0]
+    
+        all_match[0] = combo[i][0]
+        all_match[1] = 1
+        all_match[2] = combo[i][2]
+        
+        intersection[i+1] = if_else(match, all_match.get_vector(), 
+                                    if_else(combo[i+1][1]==1, combo[i+1].get_vector(), 
+                                            all_zeros.get_vector()))
+                
+
+    #shuffle to remove any knowledge about the order of matches
+    intersection.secure_shuffle()
+    
+    #At this point, we can either reveal the outcome directly
+    #But we only want to the elements of B (otherwise the output is too large).
+    #So, in the main function we'll send this intersection to a filter and
+    #return only the elements of B.
+
+    
+    return intersection
+    
+    
+def filter_dummies(arr, A_size, B_size, j=0):
+    """
+    Removes the elements that are dummies, 
+    i.e. those that are marked with 0
+    In this case we know a-priori how many elements are 0/1
+    arr has the elements and the distinguisher
+    """
+    
+    
+    distinguished = Matrix(B_size, 2, sint)
+    
+    keep_vec = Array(A_size+B_size, cint)
+    keys_vec = Array(A_size+B_size, sint)
+    values_vec = Array(A_size+B_size, sint)
+    
+    
+    keep_vec.assign_vector((arr.get_column(1).reveal()).get_vector())
+    keys_vec.assign_vector(arr.get_column(0).get_vector())
+    values_vec.assign_vector((arr.get_column(2)).get_vector())
+    
+    j = MemValue(0)
+    for i in range(A_size+B_size):  
+        @if_(keep_vec[i]!=0)
+        def _():
+            distinguished[j][0] = keys_vec[i]
+            distinguished[j][1] = values_vec[i]
+            j.iadd(1)
+     
+
+
+    return distinguished
+            
+            
+    
+
+def shuffled_intersection_inputs(n, m):
+    combo = Matrix(n+m, 3, sint)
+
+
+    # input of each player, along with what set it came from
+    @for_range_opt(n)
+    def _(i):
+        combo[i][0] = sfix.get_input_from(0)
+        combo[i][1] = 0
+        combo[i][2] = i+1 # the match key, for now
+    @for_range_opt(m)
+    def _(i):
+        combo[i+n][0] = sfix.get_input_from(1)
+        combo[i+n][1] =1
+        combo[i+n][2] = 0
+        
+        
+
+    shuf_int = merge_and_shuffle(combo)
+    
+
+    @for_range(n+m)
+    def _(i):
+        print_str('%s: %s, ', shuf_int[i][0].reveal(), shuf_int[i][2].reveal())
+
+    print_ln('**** \n')
+
+
+
+
+
+    matches_only = filter_dummies(shuf_int, n, m)
+
+
+
+
+     
+    @for_range(n)
+    def _(i):
+        print_str('%s: %s, ', matches_only[i][0].reveal(), matches_only[i][1].reveal())
+
+    print_ln('\n')
+        
+
+shuffled_intersection_inputs(8,8)

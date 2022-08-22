@@ -1,0 +1,20 @@
+"""
+Example programs used in the SPDZ tutorial at the TPMPC 2017 workshop in Bristol.
+"""
+
+from util import if_else
+
+program.bit_length = 32
+
+def millionnaires():
+	""" Secure comparison, receiving input from each party via stdin """
+	print_ln("Waiting for Alice's input")
+	alice = sint.get_input_from(0)
+	print_ln("Waiting for Bob's input")
+	bob = sint.get_input_from(1)
+
+	b = alice < bob
+	print_ln('The richest is: %s', b.reveal())
+
+millionnaires()
+

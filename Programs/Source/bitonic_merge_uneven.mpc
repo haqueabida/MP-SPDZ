@@ -1,0 +1,44 @@
+import util
+from util import if_else
+from Compiler import library
+
+program.bit_length = 32
+
+def merge_intersection(n,m,combo):
+    """ Merge-and-scan style private set intersection
+    
+        Need to assume N = n+m
+    Returns: secret Array with intersection value if the element matches,
+            and a 0 where the elements do not match
+            
+    """
+    intersection = Array(n+m, sint)
+
+    cs = library.bitonicmerge_uneven(n, m, combo)
+    
+ 
+    @for_range(m+n-1)
+    def _(i):
+        match = cs[i] == cs[i+1]
+        intersection[i] = if_else(match, cs[i], intersection[i])
+        
+
+    return intersection
+    
+
+def set_intersection_inputs(n, m):
+    combo = Array(n+m, sint)
+
+    @for_range_opt(n)
+    def _(i):
+        combo[i] = sfix.get_input_from(0)
+    @for_range_opt(m)
+    def _(j):
+        combo[j+n] = sfix.get_input_from(1)
+
+    intersection = merge_intersection(n, m, combo)
+    
+
+
+
+set_intersection_inputs(32, 992)

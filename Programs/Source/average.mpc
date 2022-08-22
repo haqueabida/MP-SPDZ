@@ -1,0 +1,47 @@
+# sint: secret integers
+
+def test(actual, expected):
+
+    # you can reveal a number in order to print it
+
+    actual = actual.reveal()
+    print_ln('expected %s, got %s', expected, actual)
+
+# private inputs are read from Player-Data/Input-P<i>-0
+# or from standard input if using command-line option -I
+
+for i in 0, 1:
+    print_ln('got %s from player %s', sint.get_input_from(i).reveal(), i)
+
+
+# now let's do a computation with private inputs
+# party 0 supplies three number and party 1 supplies three percentages
+# we want to compute the weighted mean
+
+print_ln('Party 0: please input three numbers not adding up to zero')
+print_ln('Party 1: please input any three numbers')
+
+data = Matrix(3, 2, sfix)
+
+# use @for_range_opt for balanced optimization
+# but use Python loops if compile-time numbers are need (e.g., for players)
+
+@for_range_opt(3)
+def _(i):
+    for j in range(2):
+        data[i][j] = sfix.get_input_from(j)
+
+# compute weighted average
+
+weight_total = sum(point[0] for point in data)
+result = sum(point[0] * point[1] for point in data) / weight_total
+
+# branching is supported also depending on revealed secret data
+# with garbled circuits this triggers a interruption of the garbling
+
+@if_e((sum(point[0] for point in data) != 0).reveal())
+def _():
+    print_ln('weighted average: %s', result.reveal())
+@else_
+def _():
+    print_ln('your inputs made no sense')
