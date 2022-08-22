@@ -1,0 +1,47 @@
+from util import if_else
+
+program.bit_length = 32
+
+def compute_intersection(a, b):
+    """ Naive quadratic private set intersection.
+
+    Returns: secret Array with intersection  and
+    secret Array of bits indicating whether Alice's input matches or not """
+    n = len(a)
+    m = len(b)
+    
+    if m < n:
+        raise CompilerError('First set should be smaller or same size')
+    intersection = Array(n, sint)
+
+    @for_range_opt(n*m)
+    def _(k):
+        i = k%n
+        j = k//n
+        intersection[i] = if_else(a[i] == b[j], a[i], intersection[i])
+            
+    return intersection
+
+
+
+
+n=32
+m=32
+
+a = Array(n, sint)
+b = Array(m, sint)
+
+@for_range_opt(n)
+def _(i):
+    a[i] = sfix.get_input_from(0)
+@for_range_opt(m)
+def _(j):
+    b[j] = sfix.get_input_from(1)
+
+intersection  = compute_intersection(a,b)
+
+
+
+@for_range(n)
+def _(i):
+    print_str('%s, ', intersection[i].reveal())

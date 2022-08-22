@@ -873,27 +873,10 @@ def bitoniccomps(n):
             for j in range(i+1, n):
                 if i^j == k:
                     comp_tuples.append((i,j))
+                    
 
     return comp_tuples
 
-def oemcomps(n):
-    '''
-    n needs to be a power of 2
-    This is JUST the merge, assuming the left/right sides are already sorted.
-    Should be on the order of n*lg(n), but has fewer than bitonic merge!
-    '''
-    indices = []
-    index_array = [i for i in range(n)]
-
-    if n>2:
-        evenseq = oemcomps(n//2, index_array[0:n-2+1:2])
-        oddseq = oemcomps(n//2, index_array[1:n-1+1:2])
-        indices_here = [(index_array[i],index_array[i+1]) for i in range(1,n-3+1)]
-        indices = indices+evenseq+oddseq+indices_here
-    else:
-        indices.append((index_array[0], index_array[1]))
-        
-    return indices
 
 
 
@@ -1002,6 +985,40 @@ def bitonicmerge_multithread(n, arr):
         arr[i], arr[j] = cond_swap(arr[i], arr[j])
     
     return arr
+
+
+def oemcomps(n, index_array):
+    '''
+    n needs to be a power of 2
+    This is JUST the merge, assuming the left/right sides are already sorted.
+    Should be on the order of n*lg(n), but has fewer than bitonic merge!
+    '''
+    indices = []
+    
+
+    if n>2:
+        evenseq = oemcomps(n//2, index_array[0:n-2+1:2])
+        oddseq = oemcomps(n//2, index_array[1:n-1+1:2])
+        indices_here = [(index_array[i],index_array[i+1]) for i in range(1,n-3+1)]
+        indices = indices+evenseq+oddseq+indices_here
+    else:
+        indices.append((index_array[0], index_array[1]))
+        
+    return indices
+
+
+
+def oemerge(n, arr):
+    index_array = [i for i in range(2*n)]
+    
+        
+    pairs = oemcomps(2*n, index_array)
+    
+    for i,j in pairs:
+        arr[i], arr[j] = cond_swap(arr[i], arr[j])
+    
+    return arr
+    
 
 def quadratic_psi(n,m, arr1, arr2):
     '''

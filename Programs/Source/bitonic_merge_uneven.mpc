@@ -41,4 +41,4 @@ def set_intersection_inputs(n, m):
 
 
 
-set_intersection_inputs(32, 992)
+set_intersection_inputs(32, 32)

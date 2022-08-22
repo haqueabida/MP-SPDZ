@@ -31,12 +31,22 @@ def merge_and_shuffle(combo):
     
     
     all_zeros = Array(3, sint)
-    all_zeros[0] = 0
-    all_zeros[1] = 0
-    all_zeros[2] = 0
+    all_zeros.assign_all(0)
+    
+
+    all_match = Matrix(N,3, sint)
+    
+    all_match.set_column(0, combo.get_column(0))
+    all_match.set_column(1, Array(N, sint).assign_all(1).get_vector())
+    all_match.set_column(2, combo.get_column(2))
     
     
-    all_match = Array(3, sint)
+    match = Array(N, sint)
+    
+    shift_up = Array(N, sint)
+    shift_up = combo.get_column(0).get_vector(base=1)
+    
+    match.assign_vector(shift_up.get_vector() == combo.get_column(0).get_vector())
     
 
     
@@ -51,13 +61,8 @@ def merge_and_shuffle(combo):
     
     @for_range(N-1)
     def _(i):
-        match = combo[i][0] == combo[i+1][0]
     
-        all_match[0] = combo[i][0]
-        all_match[1] = 1
-        all_match[2] = combo[i][2]
-        
-        intersection[i+1] = if_else(match, all_match.get_vector(), 
+        intersection[i+1] = if_else(match[i], all_match[i].get_vector(), 
                                     if_else(combo[i+1][1]==1, combo[i+1].get_vector(), 
                                             all_zeros.get_vector()))
                 
