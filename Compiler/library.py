@@ -833,8 +833,8 @@ def quadraticcomps(n,m):
     n : length (a power of 2)
     
     Checks the indices to see if the XOR is off by the right amount
-    This yields the pairs we will eventually want to compare for bitonic merge
-    (in order)
+    This yields the pairs we will eventually want to compare for quadratic
+    comparison
 
     Returns
     -------
@@ -855,12 +855,12 @@ def bitoniccomps(n):
     n : length (a power of 2)
     
     Checks the indices to see if the XOR is off by the right amount
-    This yields the pairs we will eventually want to compare for bitonic merge
-    (in order)
+    Note that this is all cleartext functions; nothing is secret here.
 
     Returns
     -------
-    comp_tuples : a list of tuples
+    comp_tuples : a list of tuples; the pairs we will compare for bitonic merge
+    (in order)
 
     '''
     numofbits = n.bit_length()-1
@@ -920,9 +920,7 @@ def bitonicmerge_uneven(n, m, arr):
     
     max_val = (n+m).bit_length()
     min_val = (n).bit_length()
-    
-    comp_tuples =  []
-    
+        
     for x in range(min_val, max_val):
         z = 2**x
         pairs = bitoniccomps(z)
@@ -999,26 +997,65 @@ def oemcomps(n, index_array):
     if n>2:
         evenseq = oemcomps(n//2, index_array[0:n-2+1:2])
         oddseq = oemcomps(n//2, index_array[1:n-1+1:2])
-        indices_here = [(index_array[i],index_array[i+1]) for i in range(1,n-3+1)]
+        indices_here = [(index_array[i],index_array[i+1]) for i in range(1,n-3+1, 2)]
         indices = indices+evenseq+oddseq+indices_here
     else:
         indices.append((index_array[0], index_array[1]))
         
     return indices
 
+def oempartner(n,l,p):
+    if (p == 1):
+        return n ^ (1 << (l - 1))
+    else:
+        (scale, box) = (1 << (l - p), 1 << p)
+        sn = n // scale - (((n // scale) // box) * box)
+        if (sn == 0 or (sn == box - 1)):
+            return n
+        else:
+            if (sn % 2 == 0):
+                return n - scale
+            else:
+                return n + scale
+            
+def oemcomps_iter(n):
+    '''
+    Parameters
+    ----------
+    n : length of array (must be power of 2)
+
+    Returns
+    -------
+    sp: a list of pairs of what needs to get compared.
+
+    '''
+
+    l = n.bit_length()-1
+
+     
+    sp = []
+
+    for p in range(1, l+1):
+        for node in range(0,n):    
+            s = oempartner(node,l,p)
+            if node<s:
+                sp.append((node, s))
+    return sp
 
 
 def oemerge(n, arr):
-    index_array = [i for i in range(2*n)]
-    
-        
-    pairs = oemcomps(2*n, index_array)
+    #index_array = [i for i in range(2*n)]
+    #pairs = oemcomps(2*n, index_array)
+    pairs = oemcomps_iter(2*n)
     
     for i,j in pairs:
         arr[i], arr[j] = cond_swap(arr[i], arr[j])
     
-    return arr
     
+    return arr
+
+
+
 
 def quadratic_psi(n,m, arr1, arr2):
     '''

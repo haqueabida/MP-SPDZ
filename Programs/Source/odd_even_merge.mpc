@@ -14,15 +14,8 @@ def odd_even_merge_intersection(n, combo):
     """
     intersection = Array(2*n, sint)
 
-    cs = library.oemerge(2*n, combo)
-    
-    
-        
-    @for_range(2*n)
-    def _(i):
-        print_str('%s, ', cs[i].reveal())
- 
-    print_ln('\n')
+    cs = library.oemerge(n, combo)
+
     
     @for_range(2*n-1)
     def _(i):
@@ -39,19 +32,20 @@ def set_intersection_inputs(n):
     @for_range_opt(n)
     def _(i):
         combo[i] = sfix.get_input_from(0)
-    @for_range_opt(n)
-    def _(j):
-        combo[j+n] = sfix.get_input_from(1)
+        combo[i+n] = sfix.get_input_from(1)
+         
 
     intersection = odd_even_merge_intersection(n, combo)
+    
+    
     
     return intersection
 
 
-n=32
+n=8
 intersection = set_intersection_inputs(n)
 
 
-@for_range(n)
+@for_range(2*n)
 def _(i):
     print_str('%s, ', intersection[i].reveal())
