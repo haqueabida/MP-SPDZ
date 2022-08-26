@@ -1,0 +1,11 @@
+ 
+Data sent = 97920.9 MB in ~98379 rounds (party 0)
+Global data sent = 195842 MB (all parties)
+
+675.869       
+682.353         
+682.207         
+676.957         
+682.036        
+675.634         
+673.72        
