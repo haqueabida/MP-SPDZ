@@ -68,7 +68,7 @@ def merge_and_shuffle(combo):
                 
 
     #shuffle to remove any knowledge about the order of matches
-    intersection.secure_shuffle()
+    intersection
     
     #At this point, we can either reveal the outcome directly
     #But we only want to the elements of B (otherwise the output is too large).
@@ -114,7 +114,7 @@ def filter_dummies(arr, A_size, B_size, j=0):
             
     
 
-def shuffled_intersection_inputs(n, m):
+def shuffled_inputs(n, m):
     combo = Matrix(n+m, 3, sint)
 
 
@@ -132,21 +132,8 @@ def shuffled_intersection_inputs(n, m):
         
         
 
-    shuf_int = merge_and_shuffle(combo)
+    combo.secure_shuffle()
     
-
-#    @for_range(n+m)
-#    def _(i):
-#        print_str('%s: %s, ', shuf_int[i][0].reveal(), shuf_int[i][2].reveal())
-
-#    print_ln('**** \n')
-
-
-
-
-
-    matches_only = filter_dummies(shuf_int, n, m)
-
 
 
 
@@ -157,9 +144,8 @@ def shuffled_intersection_inputs(n, m):
 
 #    print_ln('\n')
     
-    
 n = 512
 m = 512
 
-shuffled_intersection_inputs(n,m)
+shuffled_inputs(n,m)
 

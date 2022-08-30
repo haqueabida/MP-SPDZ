@@ -42,10 +42,5 @@ def set_intersection_inputs(n):
     return intersection
 
 
-n=8
+n=2
 intersection = set_intersection_inputs(n)
-
-
-@for_range(2*n)
-def _(i):
-    print_str('%s, ', intersection[i].reveal())

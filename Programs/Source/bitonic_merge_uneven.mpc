@@ -15,7 +15,8 @@ def merge_intersection(n,m,combo):
     intersection = Array(n+m, sint)
 
     cs = library.bitonicmerge_uneven(n, m, combo)
-    
+
+    print_ln('\n')
  
     @for_range(m+n-1)
     def _(i):
@@ -41,4 +42,4 @@ def set_intersection_inputs(n, m):
 
 
 
-set_intersection_inputs(32, 32)
+set_intersection_inputs(2,2)

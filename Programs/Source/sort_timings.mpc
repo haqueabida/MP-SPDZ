@@ -1,0 +1,49 @@
+import util
+from util import if_else
+from Compiler import library
+
+program.bit_length = 32
+
+
+def sort_test(combo):
+
+    N = len(combo)
+    intersection = Matrix(N, 3, sint)
+
+
+    combo.sort()
+    
+  
+
+    
+    return combo
+    
+
+    
+
+def sorted_inputs(n, m):
+    combo = Matrix(n+m, 3, sint)
+
+
+    # input of each player, along with what set it came from
+    @for_range_opt(n)
+    def _(i):
+        combo[i][0] = sfix.get_input_from(0)
+        combo[i][1] = 0
+        combo[i][2] = i+1 # the match key, for now
+    @for_range_opt(m)
+    def _(i):
+        combo[i+n][0] = sfix.get_input_from(1)
+        combo[i+n][1] =1
+        combo[i+n][2] = 0
+        
+        
+
+    sort_test(combo)
+    
+    
+n=512
+m=512
+
+sorted_inputs(n,m)
+
