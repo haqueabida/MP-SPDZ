@@ -12,4 +12,5 @@ Global data sent = 88674.5 MB (all parties)
 307.372  
 308.296 
 313.159 
+366.625 
 

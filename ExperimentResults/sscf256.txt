@@ -1,0 +1,144 @@
+
+
+12.0778  
+Data sent = 1623.77 MB in ~1413 rounds (party 0)
+Global data sent = 3247.54 MB (all parties)
+
+'shuffle_timings.mpc':
+
+
+
+27.2996  
+Data sent = 3317.26 MB in ~11021 rounds (party 0)
+Global data sent = 6634.52 MB (all parties)
+
+'match_timings.mpc':
+
+
+
+281.613  
+Data sent = 41132.8 MB in ~39695 rounds (party 0)
+Global data sent = 82265.7 MB (all parties)
+
+'sort_timings.mpc':
+
+
+
+12.8517  
+Data sent = 1623.77 MB in ~1413 rounds (party 0)
+Global data sent = 3247.54 MB (all parties)
+
+'shuffle_timings.mpc':
+
+
+
+25.4891  
+Data sent = 3317.26 MB in ~11021 rounds (party 0)
+Global data sent = 6634.52 MB (all parties)
+
+'match_timings.mpc':
+
+
+
+281.199  
+Data sent = 41132.8 MB in ~39695 rounds (party 0)
+Global data sent = 82265.7 MB (all parties)
+
+'sort_timings.mpc':
+
+
+
+12.0456  
+Data sent = 1623.77 MB in ~1413 rounds (party 0)
+Global data sent = 3247.54 MB (all parties)
+
+'shuffle_timings.mpc':
+
+
+
+25.4654  
+Data sent = 3317.26 MB in ~11021 rounds (party 0)
+Global data sent = 6634.52 MB (all parties)
+
+'match_timings.mpc':
+
+
+
+284.233  
+Data sent = 41132.8 MB in ~39695 rounds (party 0)
+Global data sent = 82265.7 MB (all parties)
+
+'sort_timings.mpc':
+
+
+
+12.0998  
+Data sent = 1623.77 MB in ~1413 rounds (party 0)
+Global data sent = 3247.54 MB (all parties)
+
+'shuffle_timings.mpc':
+
+
+
+25.7778  
+Data sent = 3317.26 MB in ~11021 rounds (party 0)
+Global data sent = 6634.52 MB (all parties)
+
+'match_timings.mpc':
+
+
+
+282.265  
+Data sent = 41132.8 MB in ~39695 rounds (party 0)
+Global data sent = 82265.7 MB (all parties)
+
+'sort_timings.mpc':
+
+
+
+12.3971  
+Data sent = 1623.77 MB in ~1413 rounds (party 0)
+Global data sent = 3247.54 MB (all parties)
+
+'shuffle_timings.mpc':
+
+
+
+25.589  
+Data sent = 3317.26 MB in ~11021 rounds (party 0)
+Global data sent = 6634.52 MB (all parties)
+
+'match_timings.mpc':
+
+
+
+282.762  
+Data sent = 41132.8 MB in ~39695 rounds (party 0)
+Global data sent = 82265.7 MB (all parties)
+
+'sort_timings.mpc':
+
+Using security parameter 40
+The following timing is inclusive preprocessing.
+Time = 11.8016 seconds 
+Data sent = 1623.77 MB in ~1413 rounds (party 0)
+Global data sent = 3247.54 MB (all parties)
+This program might benefit from some protocol options.
+Consider adding the following at the beginning of 'shuffle_timings.mpc':
+	program.use_edabit(True)
+Using security parameter 40
+The following timing is inclusive preprocessing.
+Time = 26.3838 seconds 
+Data sent = 3317.26 MB in ~11021 rounds (party 0)
+Global data sent = 6634.52 MB (all parties)
+This program might benefit from some protocol options.
+Consider adding the following at the beginning of 'match_timings.mpc':
+	program.use_edabit(True)
+Using security parameter 40
+The following timing is inclusive preprocessing.
+Time = 284.609 seconds 
+Data sent = 41132.8 MB in ~39695 rounds (party 0)
+Global data sent = 82265.7 MB (all parties)
+This program might benefit from some protocol options.
+Consider adding the following at the beginning of 'sort_timings.mpc':
+	program.use_edabit(True)

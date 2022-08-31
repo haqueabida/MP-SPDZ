@@ -1,0 +1,174 @@
+
+
+60.293  
+Data sent = 3383.05 MB in ~2813 rounds (party 0)
+Global data sent = 6766.11 MB (all parties)
+
+'shuffle_timings.mpc':
+
+
+
+120.487  
+Data sent = 6591.44 MB in ~21973 rounds (party 0)
+Global data sent = 13182.9 MB (all parties)
+
+'match_timings.mpc':
+
+
+
+855.654  
+Data sent = 91329.3 MB in ~76627 rounds (party 0)
+Global data sent = 182659 MB (all parties)
+
+'sort_timings.mpc':
+
+
+
+30.7826  
+Data sent = 3383.05 MB in ~2813 rounds (party 0)
+Global data sent = 6766.11 MB (all parties)
+
+'shuffle_timings.mpc':
+
+
+
+60.778  
+Data sent = 6591.44 MB in ~21973 rounds (party 0)
+Global data sent = 13182.9 MB (all parties)
+
+'match_timings.mpc':
+
+
+
+767.123  
+Data sent = 91329.3 MB in ~76627 rounds (party 0)
+Global data sent = 182659 MB (all parties)
+
+'sort_timings.mpc':
+
+
+
+24.586  
+Data sent = 3383.05 MB in ~2813 rounds (party 0)
+Global data sent = 6766.11 MB (all parties)
+
+'shuffle_timings.mpc':
+
+
+
+50.8867  
+Data sent = 6591.44 MB in ~21973 rounds (party 0)
+Global data sent = 13182.9 MB (all parties)
+
+'match_timings.mpc':
+
+
+
+624.628  
+Data sent = 91329.3 MB in ~76627 rounds (party 0)
+Global data sent = 182659 MB (all parties)
+
+'sort_timings.mpc':
+
+
+
+24.9097  
+Data sent = 3383.05 MB in ~2813 rounds (party 0)
+Global data sent = 6766.11 MB (all parties)
+
+'shuffle_timings.mpc':
+
+
+
+48.5131  
+Data sent = 6591.44 MB in ~21973 rounds (party 0)
+Global data sent = 13182.9 MB (all parties)
+
+'match_timings.mpc':
+
+
+
+617.8  
+Data sent = 91329.3 MB in ~76627 rounds (party 0)
+Global data sent = 182659 MB (all parties)
+
+'sort_timings.mpc':
+
+Using security parameter 40
+libc++abi: terminating with uncaught exception of type IO_Error: IO-Error : not enough inputs in Player-Data/Input-P0-0
+Using security parameter 40
+libc++abi: terminating with uncaught exception of type IO_Error: IO-Error : not enough inputs in Player-Data/Input-P0-0
+Using security parameter 40
+libc++abi: terminating with uncaught exception of type IO_Error: IO-Error : not enough inputs in Player-Data/Input-P0-0
+Using security parameter 40
+The following timing is inclusive preprocessing.
+Time = 24.9368 seconds 
+Data sent = 3383.05 MB in ~2813 rounds (party 0)
+Global data sent = 6766.11 MB (all parties)
+This program might benefit from some protocol options.
+Consider adding the following at the beginning of 'shuffle_timings.mpc':
+	program.use_edabit(True)
+Using security parameter 40
+The following timing is inclusive preprocessing.
+Time = 49.5485 seconds 
+Data sent = 6591.44 MB in ~21973 rounds (party 0)
+Global data sent = 13182.9 MB (all parties)
+This program might benefit from some protocol options.
+Consider adding the following at the beginning of 'match_timings.mpc':
+	program.use_edabit(True)
+Using security parameter 40
+The following timing is inclusive preprocessing.
+Time = 625.974 seconds 
+Data sent = 91329.3 MB in ~76627 rounds (party 0)
+Global data sent = 182659 MB (all parties)
+This program might benefit from some protocol options.
+Consider adding the following at the beginning of 'sort_timings.mpc':
+	program.use_edabit(True)
+Using security parameter 40
+The following timing is inclusive preprocessing.
+Time = 25.5504 seconds 
+Data sent = 3383.05 MB in ~2813 rounds (party 0)
+Global data sent = 6766.11 MB (all parties)
+This program might benefit from some protocol options.
+Consider adding the following at the beginning of 'shuffle_timings.mpc':
+	program.use_edabit(True)
+Using security parameter 40
+The following timing is inclusive preprocessing.
+Time = 50.6866 seconds 
+Data sent = 6591.44 MB in ~21973 rounds (party 0)
+Global data sent = 13182.9 MB (all parties)
+This program might benefit from some protocol options.
+Consider adding the following at the beginning of 'match_timings.mpc':
+	program.use_edabit(True)
+Using security parameter 40
+The following timing is inclusive preprocessing.
+Time = 620.243 seconds 
+Data sent = 91329.3 MB in ~76627 rounds (party 0)
+Global data sent = 182659 MB (all parties)
+This program might benefit from some protocol options.
+Consider adding the following at the beginning of 'sort_timings.mpc':
+	program.use_edabit(True)
+Using security parameter 40
+The following timing is inclusive preprocessing.
+Time = 25.484 seconds 
+Data sent = 3383.05 MB in ~2813 rounds (party 0)
+Global data sent = 6766.11 MB (all parties)
+This program might benefit from some protocol options.
+Consider adding the following at the beginning of 'shuffle_timings.mpc':
+	program.use_edabit(True)
+Using security parameter 40
+The following timing is inclusive preprocessing.
+Time = 52.4325 seconds 
+Data sent = 6591.44 MB in ~21973 rounds (party 0)
+Global data sent = 13182.9 MB (all parties)
+This program might benefit from some protocol options.
+Consider adding the following at the beginning of 'match_timings.mpc':
+	program.use_edabit(True)
+Using security parameter 40
+The following timing is inclusive preprocessing.
+Time = 968.569 seconds 
+Data sent = 91329.3 MB in ~76627 rounds (party 0)
+Global data sent = 182659 MB (all parties)
+This program might benefit from some protocol options.
+Consider adding the following at the beginning of 'sort_timings.mpc':
+	program.use_edabit(True)

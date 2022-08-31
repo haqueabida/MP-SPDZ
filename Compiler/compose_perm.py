@@ -53,9 +53,23 @@ def oemcomps_iter(n):
 
 
 def apply_perm_simple(arr, perm):
+    '''
+
+    Parameters
+    ----------
+    arr : a list
+    perm : a list (assume Cauchy notation)
+    
+    Applies the permutation perm to arr
+
+    Returns
+    -------
+    result : permuted list of perm(arr).
+
+    '''
     n = len(arr)
     result = np.empty(n, dtype=object)
-	for i in range(n):
+    for i in range(n):
         result[i] = arr[perm[i]]
     return result
 

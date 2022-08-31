@@ -1,0 +1,90 @@
+ 
+ 
+Time = 6.46207 seconds 
+Data sent = 788.264 MB in ~741 rounds (party 0)
+Global data sent = 1576.53 MB (all parties)
+ 
+ 'shuffle_timings.mpc':
+ 
+ 
+ 
+Time = 13.4297 seconds 
+Data sent = 1691.45 MB in ~5553 rounds (party 0)
+Global data sent = 3382.9 MB (all parties)
+ 
+ 'match_timings.mpc':
+ 
+ 
+ 
+Time = 127.235 seconds 
+Data sent = 18310.2 MB in ~22331 rounds (party 0)
+Global data sent = 36620.5 MB (all parties)
+ 
+ 'sort_timings.mpc':
+ 
+ 
+ 
+Time = 5.98703 seconds 
+Data sent = 788.264 MB in ~741 rounds (party 0)
+Global data sent = 1576.53 MB (all parties)
+ 
+ 'shuffle_timings.mpc':
+ 
+ 
+ 
+Time = 13.0835 seconds 
+Data sent = 1691.45 MB in ~5553 rounds (party 0)
+Global data sent = 3382.9 MB (all parties)
+ 
+ 'match_timings.mpc':
+ 
+ 
+libc++abi: terminating with uncaught exception of type std::runtime_error: abidahaque-mbp : Send error - 1  : Connection reset by peer
+ 
+ 
+Time = 5.9962 seconds 
+Data sent = 788.264 MB in ~741 rounds (party 0)
+Global data sent = 1576.53 MB (all parties)
+ 
+ 'shuffle_timings.mpc':
+ 
+ 
+ 
+Time = 13.2939 seconds 
+Data sent = 1691.45 MB in ~5553 rounds (party 0)
+Global data sent = 3382.9 MB (all parties)
+ 
+ 'match_timings.mpc':
+ 
+ 
+ 
+Time = 127.385 seconds 
+Data sent = 18310.2 MB in ~22331 rounds (party 0)
+Global data sent = 36620.5 MB (all parties)
+ 
+ 'sort_timings.mpc':
+ 
+ 
+ 
+Time = 6.12998 seconds 
+Data sent = 788.264 MB in ~741 rounds (party 0)
+Global data sent = 1576.53 MB (all parties)
+ 
+ 'shuffle_timings.mpc':
+ 
+ 
+ 
+Time = 13.3073 seconds 
+Data sent = 1691.45 MB in ~5553 rounds (party 0)
+Global data sent = 3382.9 MB (all parties)
+ 
+ 'match_timings.mpc':
+ 
+ 
+ 
+Time = 130.811 seconds 
+Data sent = 18310.2 MB in ~22331 rounds (party 0)
+Global data sent = 36620.5 MB (all parties)
+ 
+ 'sort_timings.mpc':
+ 
