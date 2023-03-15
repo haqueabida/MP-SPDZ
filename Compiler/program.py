@@ -10,6 +10,7 @@ import math
 import os
 import re
 import sys
+import hashlib
 from collections import defaultdict, deque
 from functools import reduce
 
@@ -29,6 +30,7 @@ data_types = dict(
     bit=2,
     inverse=3,
     dabit=4,
+    mixed=5,
 )
 
 field_types = dict(
@@ -45,13 +47,15 @@ class defaults:
     ring = 0
     field = 0
     binary = 0
+    garbled = False
     prime = None
     galois = 40
-    budget = 100000
+    budget = 1000
     mixed = False
     edabit = False
+    invperm = False
     split = None
-    cisc = False
+    cisc = True
     comparison = None
     merge_opens = True
     preserve_mem_order = False
@@ -123,7 +127,13 @@ class Program(object):
         self.n_threads = 1
         self.public_input_file = None
         self.types = {}
-        self.budget = int(self.options.budget)
+        if self.options.budget:
+            self.budget = int(self.options.budget)
+        else:
+            if self.options.optimize_hard:
+                self.budget = 100000
+            else:
+                self.budget = defaults.budget
         self.to_merge = [
             Compiler.instructions.asm_open_class,
             Compiler.instructions.gasm_open_class,
@@ -149,16 +159,19 @@ class Program(object):
             gc.ldmsd,
             gc.stmsd,
             gc.stmsdci,
-            gc.xors,
             gc.andrs,
             gc.ands,
             gc.inputb,
+            gc.inputbvec,
+            gc.reveal,
         ]
         self.use_trunc_pr = False
         """ Setting whether to use special probabilistic truncation. """
         self.use_dabit = options.mixed
         """ Setting whether to use daBits for non-linear functionality. """
         self._edabit = options.edabit
+        """ Whether to use the low-level INVPERM instruction (only implemented with the assumption of a semi-honest two-party environment)"""
+        self._invperm = options.invperm
         self._split = False
         if options.split:
             self.use_split(int(options.split))
@@ -169,6 +182,11 @@ class Program(object):
         self.relevant_opts = set()
         self.n_running_threads = None
         self.input_files = {}
+        self.base_addresses = {}
+        self._protect_memory = False
+        if not self.options.cisc:
+            self.options.cisc = not self.options.optimize_hard
+
         Program.prog = self
         from . import comparison, instructions, instructions_base, types
 
@@ -190,7 +208,7 @@ class Program(object):
         # ignore path to file - source must be in Programs/Source
         if "Programs" in os.listdir(os.getcwd()):
             # compile prog in ./Programs/Source directory
-            self.programs_dir = os.getcwd() + "/Programs"
+            self.programs_dir = "Programs"
         else:
             # assume source is in main SPDZ directory
             self.programs_dir = sys.path[0] + "/Programs"
@@ -347,7 +365,8 @@ class Program(object):
         print("Writing to", sch_filename)
         sch_file.write(str(self.max_par_tapes()) + "\n")
         sch_file.write(str(len(nonempty_tapes)) + "\n")
-        sch_file.write(" ".join(tape.name for tape in nonempty_tapes) + "\n")
+        sch_file.write(" ".join("%s:%d" % (tape.name, len(tape))
+                                for tape in nonempty_tapes) + "\n")
         sch_file.write("1 0\n")
         sch_file.write("0\n")
         sch_file.write(" ".join(sys.argv) + "\n")
@@ -360,8 +379,12 @@ class Program(object):
             sch_file.write("lgp:%s" % req)
         sch_file.write("\n")
         sch_file.write("opts: %s\n" % " ".join(self.relevant_opts))
+        sch_file.close()
+        h = hashlib.sha256()
         for tape in self.tapes:
             tape.write_bytes()
+            h.update(tape.hash)
+        print('Hash:', h.hexdigest())
 
     def finalize_tape(self, tape):
         if not tape.purged:
@@ -420,7 +443,7 @@ class Program(object):
             self.allocated_mem[mem_type] += size
             if len(str(addr)) != len(str(addr + size)) and self.verbose:
                 print("Memory of type '%s' now of size %d" % (mem_type, addr + size))
-            if addr + size >= 2**32:
+            if addr + size >= 2**64:
                 raise CompilerError("allocation exceeded for type '%s'" % mem_type)
         self.allocated_mem_blocks[addr, mem_type] = size
         if single_size:
@@ -428,7 +451,9 @@ class Program(object):
 
             tn = get_thread_number()
             runtime_error_if(tn > self.n_running_threads, "malloc")
-            return addr + single_size * (tn - 1)
+            res = addr + single_size * (tn - 1)
+            self.base_addresses[str(res)] = addr
+            return res
         else:
             return addr
 
@@ -436,6 +461,8 @@ class Program(object):
         """Free memory"""
         if self.curr_block.alloc_pool is not self.curr_tape.basicblocks[0].alloc_pool:
             raise CompilerError("Cannot free memory within function block")
+        if not util.is_constant(addr):
+            addr = self.base_addresses[str(addr)]
         size = self.allocated_mem_blocks.pop((addr, mem_type))
         self.free_mem_blocks[mem_type].push(addr, size)
 
@@ -462,7 +489,8 @@ class Program(object):
         if not self.options.noreallocate:
             self.curr_tape.init_registers()
         for mem_type, size in sorted(self.allocated_mem.items()):
-            if size:
+            if size and (not self.options.garbled or \
+                         mem_type not in ('s', 'sg', 'c', 'cg')):
                 # print "Memory of type '%s' of size %d" % (mem_type, size)
                 if mem_type in self.types:
                     self.types[mem_type].load_mem(size - 1, mem_type)
@@ -482,15 +510,26 @@ class Program(object):
             )
         self.public_input_file.write("%s\n" % str(x))
 
+    def get_binary_input_file(self, player):
+        key = player, 'bin'
+        if key not in self.input_files:
+            filename = 'Player-Data/Input-Binary-P%d-0' % player
+            print('Writing binary data to', filename)
+            self.input_files[key] = open(filename, 'wb')
+        return self.input_files[key]
+
     def set_bit_length(self, bit_length):
         """Change the integer bit length for non-linear functions."""
         self.bit_length = bit_length
         print("Changed bit length for comparisons etc. to", bit_length)
 
     def set_security(self, security):
+        changed = self._security != security
         self._security = security
         self.non_linear.set_security(security)
-        print("Changed statistical security for comparison etc. to", security)
+        if changed:
+            print("Changed statistical security for comparison etc. to",
+                  security)
 
     @property
     def security(self):
@@ -503,7 +542,8 @@ class Program(object):
         self.set_security(security)
 
     def optimize_for_gc(self):
-        pass
+        import Compiler.GC.instructions as gc
+        self.to_merge += [gc.xors]
 
     def get_tape_counter(self):
         res = self.tape_counter
@@ -533,6 +573,20 @@ class Program(object):
             return self._edabit
         else:
             self._edabit = change
+
+    def use_invperm(self, change=None):
+        """ Set whether to use the low-level INVPERM instruction to inverse a permutation (see sint.inverse_permutation). The INVPERM instruction assumes a semi-honest two-party environment. If false, a general protocol implemented in the high-level language is used.
+
+        :param change: change setting if not :py:obj:`None`
+        :returns: setting if :py:obj:`change` is :py:obj:`None`
+        """
+        if change is None:
+            if not self._invperm:
+                self.relevant_opts.add("invperm")
+            return self._invperm
+        else:
+            self._invperm = change
+
 
     def use_edabit_for(self, *args):
         return True
@@ -594,12 +648,27 @@ class Program(object):
             self.always_raw(True)
         if "edabit" in self.args:
             self.use_edabit(True)
+        if "invperm" in self.args:
+            self.use_invperm(True)
         if "linear_rounds" in self.args:
             self.linear_rounds(True)
 
     def disable_memory_warnings(self):
         self.warn_about_mem.append(False)
         self.curr_block.warn_about_mem = False
+
+    def protect_memory(self, status):
+        """ Enable or disable memory protection. """
+        self._protect_memory = status
+
+    def use_cisc(self):
+        return self.options.cisc and (not self.prime or self.rabbit_gap())
+
+    def rabbit_gap(self):
+        assert self.prime
+        p = self.prime
+        logp = int(round(math.log(p, 2)))
+        return abs(p - 2 ** logp) / p < 2 ** -self.security
 
     @staticmethod
     def read_tapes(schedule):
@@ -619,7 +688,7 @@ class Program(object):
             sys.exit(1)
 
         for tapename in lines[2].split(" "):
-            yield tapename.strip()
+            yield tapename.strip().split(":")[0]
 
 
 class Tape:
@@ -647,6 +716,7 @@ class Tape:
         self.singular = True
         self.free_threads = set()
         self.loop_breaks = []
+        self.warned_about_mem = False
 
     class BasicBlock(object):
         def __init__(self, parent, name, scope, exit_condition=None):
@@ -667,6 +737,7 @@ class Tape:
             self.purged = False
             self.n_rounds = 0
             self.n_to_merge = 0
+            self.rounds = Tape.ReqNum()
             self.warn_about_mem = parent.program.warn_about_mem[-1]
 
         def __len__(self):
@@ -731,6 +802,7 @@ class Tape:
                 inst.add_usage(req_node)
             req_node.num["all", "round"] += self.n_rounds
             req_node.num["all", "inv"] += self.n_to_merge
+            req_node.num += self.rounds
 
         def expand_cisc(self):
             new_instructions = []
@@ -777,7 +849,14 @@ class Tape:
         self.name = name
         self.outfile = self.program.programs_dir + "/Bytecode/" + self.name + ".bc"
 
+    def __len__(self):
+        if self.purged:
+            return self.size
+        else:
+            return sum(len(block) for block in self.basicblocks)
+
     def purge(self):
+        self.size = len(self)
         for block in self.basicblocks:
             block.purge()
         self._is_empty = len(self.basicblocks) == 0
@@ -846,6 +925,8 @@ class Tape:
                     numrounds = merger.longest_paths_merge()
                     block.n_rounds = numrounds
                     block.n_to_merge = len(merger.open_nodes)
+                    if options.verbose:
+                        block.rounds = merger.req_num
                     if merger.counter and self.program.verbose:
                         print(
                             "Block requires",
@@ -948,7 +1029,7 @@ class Tape:
         if self.program.verbose:
             print("Tape requires", self.req_num)
         for req, num in sorted(self.req_num.items()):
-            if num == float("inf") or num >= 2**32:
+            if num == float("inf") or num >= 2**64:
                 num = -1
             if req[1] in data_types:
                 self.basicblocks[-1].instructions.append(
@@ -1056,10 +1137,14 @@ class Tape:
             filename = self.program.programs_dir + "/Bytecode/" + filename
         print("Writing to", filename)
         f = open(filename, "wb")
+        h = hashlib.sha256()
         for i in self._get_instructions():
             if i is not None:
-                f.write(i.get_bytes())
+                b = i.get_bytes()
+                f.write(b)
+                h.update(b)
         f.close()
+        self.hash = h.digest()
 
     def new_reg(self, reg_type, size=None):
         return self.Register(reg_type, self, size=size)
@@ -1094,7 +1179,8 @@ class Tape:
         __rmul__ = __mul__
 
         def set_all(self, value):
-            if value == float("inf") and self["all", "inv"] > 0:
+            if Program.prog.options.verbose and \
+               value == float("inf") and self["all", "inv"] > 0:
                 print("Going to unknown from %s" % self)
             res = Tape.ReqNum()
             for i in self:
@@ -1123,6 +1209,8 @@ class Tape:
             res = []
             for req, num in self.items():
                 domain = t(req[0])
+                if num < 0:
+                    num = float('inf')
                 n = "%12.0f" % num
                 if req[1] == "input":
                     res += ["%s %s inputs from player %d" % (n, domain, req[2])]
@@ -1235,8 +1323,11 @@ class Tape:
 
         def __bool__(self):
             raise CompilerError(
-                "Cannot derive truth value from register, "
-                "consider using 'compile.py -l'"
+                "Cannot derive truth value from register. "
+                "This is a catch-all error appearing if you try to use a "
+                "run-time value where the compiler expects a compile-time "
+                "value, most likely a Python integer. "
+                "In some cases, you can fix this by using 'compile.py -l'."
             )
 
     class Register(_no_truth):
@@ -1256,8 +1347,9 @@ class Tape:
             "caller",
             "can_eliminate",
             "duplicates",
+            "block",
         ]
-        maximum_size = 2 ** (32 - inst_base.Instruction.code_length) - 1
+        maximum_size = 2 ** (64 - inst_base.Instruction.code_length) - 1
 
         def __init__(self, reg_type, program, size=None, i=None):
             """Creates a new register.
@@ -1269,6 +1361,7 @@ class Tape:
                     reg_type = RegType.SecretGF2N
             self.reg_type = reg_type
             self.program = program
+            self.block = program.active_basicblock
             if size is None:
                 size = Compiler.instructions_base.get_global_vector_size()
             if size is not None and size > self.maximum_size:
@@ -1362,6 +1455,22 @@ class Tape:
             self.duplicates |= other.duplicates
             for dup in self.duplicates:
                 dup.duplicates = self.duplicates
+
+        def update(self, other):
+            """
+            Update register. Useful in loops like
+            :py:func:`~Compiler.library.for_range`.
+
+            :param other: any convertible type
+
+            """
+            other = type(self)(other)
+            if self.program != other.program:
+                raise CompilerError(
+                    'cannot update register with one from another thread')
+            if other.block in [x.block for x in self.duplicates]:
+                self.program.start_new_basicblock()
+            self.link(other)
 
         @property
         def is_gf2n(self):

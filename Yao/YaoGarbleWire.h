@@ -30,8 +30,6 @@ public:
 
 	static string name() { return "YaoGarbleWire"; }
 
-	static YaoGarbleWire new_reg() { return {}; }
-
 	static void andrs(GC::Processor<GC::Secret<YaoGarbleWire>>& processor,
 			const vector<int>& args)
 	{
@@ -67,6 +65,8 @@ public:
 
 	static void convcbit2s(GC::Processor<whole_type>& processor,
 			const BaseInstruction& instruction);
+
+	static void run_tapes(const vector<int>& args);
 
 	void randomize(PRNG& prng);
 	void set(Key key, bool mask);

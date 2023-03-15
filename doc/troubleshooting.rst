@@ -25,6 +25,16 @@ lists only exists at compile time. Consider using
 :py:class:`~Compiler.types.Array`.
 
 
+Local variable referenced before assignment
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This error can occur if you try to reassign a variable in a run-time
+loop like :py:func:`~Compiler.library.for_range`. Use
+:py:func:`~Compiler.program.Tape.Register.update` instead of assignment. See
+:py:func:`~Compiler.library.for_range` for an example.
+You can also use :py:func:`~Compiler.types.sint.iadd` instead of ``+=``.
+
+
 ``compile.py`` takes too long or runs out of memory
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -33,6 +43,16 @@ resulting in potentially too much virtual machine code. Consider using
 :py:func:`~Compiler.library.for_range` or similar. You can also use
 ``-l`` when compiling, which will replace simple loops by an optimized
 version.
+
+
+Incorrect results when using :py:class:`~Compiler.types.sfix`
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This is most likely caused by an overflow of the precision
+parameters because the default choice unlike accommodates numbers up
+to around 16,000. See :py:class:`~Compiler.types.sfix` for an
+introduction and :py:func:`~Compiler.types.sfix.set_precision` for how
+to change the precision.
 
 
 Order of memory instructions not preserved
@@ -101,7 +121,7 @@ MP-SPDZ requires one TCP port per party to be open to other
 parties. In the default setting, it's 5000 on party 0, and
 5001 on party 1 etc. You change change the base port (5000) using
 ``--portnumbase`` and individual ports for parties using
-``--my-port``. The scripts in use a random base port number, which you
+``--my-port``. The scripts use a random base port number, which you
 can also change with ``--portnumbase``.
 
 
@@ -138,6 +158,16 @@ Computation used more preprocessing than expected
 
 This indicates an error in the internal accounting of
 preprocessing. Please file a bug report.
+
+
+Required prime bit length is not the same as ``-F`` parameter during compilation
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This is related to statistical masking that requires the prime to be a
+fair bit larger than the actual "payload". The technique goes to back
+to `Catrina and de Hoogh
+<https://www.researchgate.net/profile/Sebastiaan-Hoogh/publication/225092133_Improved_Primitives_for_Secure_Multiparty_Integer_Computation/links/0c960533585ad99868000000/Improved-Primitives-for-Secure-Multiparty-Integer-Computation.pdf>`_.
+See also the paragraph on unknown prime moduli in :ref:`nonlinear`.
 
 
 Windows/VirtualBox performance

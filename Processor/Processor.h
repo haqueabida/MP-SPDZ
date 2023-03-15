@@ -32,9 +32,14 @@ class SubProcessor
 
   DataPositions bit_usage;
 
-  SecureShuffle<T> shuffler;
+  typename T::Protocol::Shuffler shuffler;
 
   void resize(size_t size)       { C.resize(size); S.resize(size); }
+
+  void matmulsm_prep(int i, const CheckVector<T>& source,
+      const vector<int>& dim, size_t a, size_t b);
+  void matmulsm_finalize(int i, const vector<int>& dim,
+      typename vector<T>::iterator C);
 
   template<class sint, class sgf2n> friend class Processor;
   template<class U> friend class SPDZ;
@@ -61,8 +66,10 @@ public:
       ArithmeticProcessor* Proc = 0);
   ~SubProcessor();
 
+  void check();
+
   // Access to PO (via calls to POpen start/stop)
-  void POpen(const vector<int>& reg,const Player& P,int size);
+  void POpen(const Instruction& inst);
 
   void muls(const vector<int>& reg, int size);
   void mulrs(const vector<int>& reg);
@@ -77,6 +84,7 @@ public:
   size_t generate_secure_shuffle(const Instruction& instruction);
   void apply_shuffle(const Instruction& instruction, int handle);
   void delete_shuffle(int handle);
+  void inverse_permutation(const Instruction& instruction);
 
   void input_personal(const vector<int>& args);
   void send_personal(const vector<int>& args);
@@ -101,12 +109,17 @@ public:
   {
     return C[i];
   }
+
+    void inverse_permutation(const Instruction &instruction, int handle);
 };
 
 class ArithmeticProcessor : public ProcessorBase
 {
 protected:
   CheckVector<long> Ci;
+
+  ofstream public_output;
+  ofstream binary_output;
 
 public:
   int thread_num;
@@ -116,11 +129,11 @@ public:
 
   string private_input_filename;
   string public_input_filename;
+  string binary_input_filename;
 
   ifstream private_input;
   ifstream public_input;
-  ofstream public_output;
-  ofstream binary_output;
+  ifstream binary_input;
 
   int sent, rounds;
 
@@ -163,6 +176,15 @@ public:
     throw not_implemented();
   }
 
+  virtual ofstream& get_public_output()
+  {
+    throw not_implemented();
+  }
+  virtual ofstream& get_binary_output()
+  {
+    throw not_implemented();
+  }
+
   void shuffle(const Instruction& instruction);
   void bitdecint(const Instruction& instruction);
 };
@@ -193,8 +215,11 @@ class Processor : public ArithmeticProcessor
   unsigned int PC;
   TempVars<sint, sgf2n> temp;
 
-  ExternalClients external_clients;
+  ExternalClients& external_clients;
   Binary_File_IO binary_file_io;
+
+  CommStats client_stats;
+  Timer& client_timer;
 
   void reset(const Program& program,int arg); // Reset the state of the processor
   string get_filename(const char* basename, bool use_number);
@@ -258,9 +283,14 @@ class Processor : public ArithmeticProcessor
   
   cint get_inverse2(unsigned m);
 
+  void fixinput(const Instruction& instruction);
+
   // synchronize in asymmetric protocols
   long sync_Ci(size_t i) const;
   long sync(long x) const;
+
+  ofstream& get_public_output();
+  ofstream& get_binary_output();
 
   private:
 
