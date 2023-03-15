@@ -84,6 +84,7 @@ enum
     SUBSI = 0x2A,
     SUBCFI = 0x2B,
     SUBSFI = 0x2C,
+    PREFIXSUMS = 0x2D,
     // Multiplication/division/other arithmetic
     MULC = 0x30,
     MULM = 0x31,
@@ -113,6 +114,7 @@ enum
     GENSECSHUFFLE = 0xFB,
     APPLYSHUFFLE = 0xFC,
     DELSHUFFLE = 0xFD,
+    INVPERM = 0xFE,
     // Data access
     TRIPLE = 0x50,
     BIT = 0x51,
@@ -207,6 +209,7 @@ enum
     CONDPRINTPLAIN = 0xE1,
     INTOUTPUT = 0xE6,
     FLOATOUTPUT = 0xE7,
+    FIXINPUT = 0xE8,
 
     // GF(2^n) versions
     

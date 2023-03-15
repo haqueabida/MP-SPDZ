@@ -59,12 +59,12 @@ class bits(Tape.Register, _structure, _bit):
     @classmethod
     def bit_compose(cls, bits):
         bits = list(bits)
-        if len(bits) == 1:
+        if len(bits) == 1 and isinstance(bits[0], cls):
             return bits[0]
         bits = list(bits)
         for i in range(len(bits)):
             if util.is_constant(bits[i]):
-                bits[i] = sbit(bits[i])
+                bits[i] = cls.bit_type(bits[i])
         res = cls.new(n=len(bits))
         if len(bits) <= cls.unit:
             cls.bitcom(res, *(sbit.conv(bit) for bit in bits))
@@ -173,7 +173,7 @@ class bits(Tape.Register, _structure, _bit):
         else:
             try:
                 bits = other.bit_decompose()
-                bits = bits[:self.n] + [sbit(0)] * (self.n - len(bits))
+                bits = bits[:self.n] + [self.bit_type(0)] * (self.n - len(bits))
                 other = self.bit_compose(bits)
                 assert(isinstance(other, type(self)))
                 assert(other.n == self.n)
@@ -198,6 +198,8 @@ class bits(Tape.Register, _structure, _bit):
             return 0
         elif self.is_long_one(other):
             return self
+        elif isinstance(other, _vec):
+            return other & other.from_vec([self])
         else:
             return self._and(other)
     @read_mem_value
@@ -241,6 +243,13 @@ class bits(Tape.Register, _structure, _bit):
             return self * condition
         else:
             return self * cbit.conv(condition)
+    def expand(self, length):
+        if self.n in (length, None):
+            return self
+        elif self.n == 1:
+            return self.get_type(length).bit_compose([self] * length)
+        else:
+            raise CompilerError('cannot expand from %s to %s' % (self.n, length))
 
 class cbits(bits):
     """ Clear bits register. Helper type with limited functionality. """
@@ -252,6 +261,7 @@ class cbits(bits):
     bitdec = inst.bitdecc
     conv_regint = staticmethod(lambda n, x, y: inst.convcint(x, y))
     conv_cint_vec = inst.convcintvec
+    mov = staticmethod(lambda x, y: inst.addcbi(x, y, 0))
     @classmethod
     def bit_compose(cls, bits):
         return sum(bit << i for i, bit in enumerate(bits))
@@ -264,7 +274,13 @@ class cbits(bits):
     def conv(cls, other):
         if isinstance(other, cbits) and cls.n != None and \
            cls.n // cls.unit == other.n // cls.unit:
-            return other
+            if isinstance(other, cls):
+                return other
+            else:
+                res = cls()
+                for i in range(math.ceil(cls.n / cls.unit)):
+                    cls.mov(res[i], other[i])
+                return res
         else:
             return super(cbits, cls).conv(other)
     types = {}
@@ -295,8 +311,15 @@ class cbits(bits):
                 return op(self, cbits(other))
     __add__ = lambda self, other: \
               self.clear_op(other, inst.addcb, inst.addcbi, operator.add)
-    __sub__ = lambda self, other: \
-              self.clear_op(-other, inst.addcb, inst.addcbi, operator.add)
+    def __sub__(self, other):
+        try:
+            return self + -other
+        except:
+            return type(self)(regint(self) - regint(other))
+    def __rsub__(self, other):
+        return type(self)(other - regint(self))
+    def __neg__(self):
+        return type(self)(-regint(self))
     def _xor(self, other):
         if isinstance(other, (sbits, sbitvec)):
             return NotImplemented
@@ -589,7 +612,15 @@ class sbits(bits):
         rows = list(rows)
         if len(rows) == 1 and rows[0].n <= rows[0].unit:
             return rows[0].bit_decompose()
-        n_columns = rows[0].n
+        for row in rows:
+            try:
+                n_columns = row.n
+                break
+            except:
+                pass
+        for i in range(len(rows)):
+            if util.is_zero(rows[i]):
+                rows[i] = cls.get_type(n_columns)(0)
         for row in rows:
             assert(row.n == n_columns)
         if n_columns == 1 and len(rows) <= cls.unit:
@@ -613,7 +644,7 @@ class sbits(bits):
     def ripple_carry_adder(*args, **kwargs):
         return sbitint.ripple_carry_adder(*args, **kwargs)
 
-class sbitvec(_vec):
+class sbitvec(_vec, _bit):
     """ Vector of registers of secret bits, effectively a matrix of secret bits.
     This facilitates parallel arithmetic operations in binary circuits.
     Container types are not supported, use :py:obj:`sbitvec.get_type` for that.
@@ -621,7 +652,7 @@ class sbitvec(_vec):
     You can access the rows by member :py:obj:`v` and the columns by calling
     :py:obj:`elements`.
 
-    There are three ways to create an instance:
+    There are four ways to create an instance:
 
     1. By transposition::
 
@@ -654,8 +685,14 @@ class sbitvec(_vec):
        This should output::
 
         [1, 0, 1]
+
+    4. Private input::
+
+        x = sbitvec.get_type(32).get_input_from(player)
+
     """
     bit_extend = staticmethod(lambda v, n: v[:n] + [0] * (n - len(v)))
+    is_clear = False
     @classmethod
     def get_type(cls, n):
         """ Create type for fixed-length vector of registers of secret bits.
@@ -674,16 +711,23 @@ class sbitvec(_vec):
             def mem_size():
                 return n
             @classmethod
-            def get_input_from(cls, player):
+            def get_input_from(cls, player, size=1, f=0):
                 """ Secret input from :py:obj:`player`. The input is decomposed
                 into bits.
 
                 :param: player (int)
                 """
+                v = [0] * n
                 sbits._check_input_player(player)
-                res = cls.from_vec(sbit() for i in range(n))
-                inst.inputbvec(n + 3, 0, player, *res.v)
-                return res
+                instructions_base.check_vector_size(size)
+                for i in range(size):
+                    vv = [sbit() for i in range(n)]
+                    inst.inputbvec(n + 3, f, player, *vv)
+                    for j in range(n):
+                        tmp = vv[j] << i
+                        v[j] = tmp ^ v[j]
+                        sbits._check_input_player(player)
+                return cls.from_vec(v)
             get_raw_input_from = get_input_from
             @classmethod
             def from_vec(cls, vector):
@@ -691,10 +735,12 @@ class sbitvec(_vec):
                 res.v = _complement_two_extend(list(vector), n)[:n]
                 return res
             def __init__(self, other=None, size=None):
-                assert size in (None, 1)
+                instructions_base.check_vector_size(size)
                 if other is not None:
                     if util.is_constant(other):
-                        self.v = [sbit((other >> i) & 1) for i in range(n)]
+                        t = sbits.get_type(size or 1)
+                        self.v = [t(((other >> i) & 1) * ((1 << t.n) - 1))
+                                  for i in range(n)]
                     elif isinstance(other, _vec):
                         self.v = self.bit_extend(other.v, n)
                     elif isinstance(other, (list, tuple)):
@@ -702,6 +748,7 @@ class sbitvec(_vec):
                     else:
                         self.v = sbits.get_type(n)(other).bit_decompose()
                     assert len(self.v) == n
+                    assert size is None or size == self.v[0].n
             @classmethod
             def load_mem(cls, address, size=None):
                 if size not in (None, 1):
@@ -733,8 +780,9 @@ class sbitvec(_vec):
             def reveal(self):
                 return util.untuplify([x.reveal() for x in self.elements()])
             @classmethod
-            def two_power(cls, nn):
-                return cls.from_vec([0] * nn + [1] + [0] * (n - nn - 1))
+            def two_power(cls, nn, size=1):
+                return cls.from_vec(
+                    [0] * nn + [sbits.get_type(size)().long_one()] + [0] * (n - nn - 1))
             def coerce(self, other):
                 if util.is_constant(other):
                     return self.from_vec(util.bit_decompose(other, n))
@@ -751,6 +799,8 @@ class sbitvec(_vec):
                 return self.from_vec(x.zero_if_not(condition) for x in self.v)
             def __str__(self):
                 return 'sbitvec(%d)' % n
+        sbitvecn.basic_type = sbitvecn
+        sbitvecn.reg_type = 'sb'
         return sbitvecn
     @classmethod
     def from_vec(cls, vector):
@@ -767,6 +817,15 @@ class sbitvec(_vec):
     def from_matrix(cls, matrix):
         # any number of rows, limited number of columns
         return cls.combine(cls(row) for row in matrix)
+    @classmethod
+    def from_hex(cls, string):
+        """ Create from hexadecimal string (little-endian). """
+        assert len(string) % 2 == 0
+        v = []
+        for i in range(0, len(string), 2):
+            v += [sbit(int(x))
+                  for x in reversed(bin(int(string[i:i + 2], 16))[2:].zfill(8))]
+        return cls.from_vec(v)
     def __init__(self, elements=None, length=None, input_length=None):
         if length:
             assert isinstance(elements, sint)
@@ -818,16 +877,15 @@ class sbitvec(_vec):
         return other
     def __xor__(self, other):
         other = self.coerce(other)
-        return self.from_vec(x ^ y for x, y in zip(self.v, other))
+        return self.from_vec(x ^ y for x, y in zip(*self.expand(other)))
     def __and__(self, other):
-        return self.from_vec(x & y for x, y in zip(self.v, other.v))
+        return self.from_vec(x & y for x, y in zip(*self.expand(other)))
+    __rxor__ = __xor__
+    __rand__ = __and__
+    def __invert__(self):
+        return self.from_vec(~x for x in self.v)
     def if_else(self, x, y):
-        assert(len(self.v) == 1)
-        try:
-            return self.from_vec(util.if_else(self.v[0], a, b) \
-                                 for a, b in zip(x, y))
-        except:
-            return util.if_else(self.v[0], x, y)
+        return util.if_else(self.v[0], x, y)
     def __iter__(self):
         return iter(self.v)
     def __len__(self):
@@ -840,6 +898,7 @@ class sbitvec(_vec):
             return cls.from_vec(other.v)
         else:
             return cls(other)
+    hard_conv = conv
     @property
     def size(self):
         if not self.v or util.is_constant(self.v[0]):
@@ -869,6 +928,34 @@ class sbitvec(_vec):
     def __mul__(self, other):
         if isinstance(other, int):
             return self.from_vec(x * other for x in self.v)
+        if isinstance(other, sbitvec):
+            if len(other.v) == 1:
+                other = other.v[0]
+            elif len(self.v) == 1:
+                self, other = other, self.v[0]
+            else:
+                raise CompilerError('no operand of lenght 1: %d/%d',
+                                    (len(self.v), len(other.v)))
+        if not isinstance(other, sbits):
+            return NotImplemented
+        ops = []
+        for x in self.v:
+            if not util.is_zero(x):
+                assert x.n == other.n
+                ops.append(x)
+        if ops:
+            prods = [sbits.get_type(other.n)() for i in ops]
+            inst.andrsvec(3 + 2 * len(ops), other.n, *prods, other, *ops)
+        res = []
+        i = 0
+        for x in self.v:
+            if util.is_zero(x):
+                res.append(0)
+            else:
+                res.append(prods[i])
+                i += 1
+        return sbitvec.from_vec(res)
+    __rmul__ = __mul__
     def __add__(self, other):
         return self.from_vec(x + y for x, y in zip(self.v, other))
     def bit_and(self, other):
@@ -890,6 +977,42 @@ class sbitvec(_vec):
             elements = red.elements()
             elements += odd
         return self.from_vec(sbitvec(elements).v)
+    @classmethod
+    def comp_result(cls, x):
+        return cls.get_type(1).from_vec([x])
+    def expand(self, other, expand=True):
+        m = 1
+        for x in itertools.chain(self.v, other.v if isinstance(other, sbitvec) else []):
+            try:
+                m = max(m, x.n)
+            except:
+                pass
+        res = []
+        if not util.is_constant(other):
+            other = self.coerce(other)
+        for y in self, other:
+            if isinstance(y, int):
+                res.append([x * sbits.get_type(m)().long_one()
+                            for x in util.bit_decompose(y, len(self.v))])
+            else:
+                res.append([x.expand(m) if (expand and isinstance(x, bits)) else x for x in y.v])
+        return res
+    def demux(self):
+        if len(self) == 1:
+            return sbitvec.from_vec([self.v[0].bit_not(), self.v[0]])
+        a = sbitvec.from_vec(self.v[:len(self) // 2]).demux()
+        b = sbitvec.from_vec(self.v[len(self) // 2:]).demux()
+        prod = [a * bb for bb in b.v]
+        return sbitvec.from_vec(reduce(operator.add, (x.v for x in prod)))
+    def reverse_bytes(self):
+        if len(self.v) % 8 != 0:
+            raise CompilerError('bit length not divisible by eight')
+        return self.from_vec(sum(reversed(
+            [self.v[i:i + 8] for i in range(0, len(self.v), 8)]), []))
+    def reveal_print_hex(self):
+        """ Reveal and print in hexademical (one line per element). """
+        for x in self.reverse_bytes().elements():
+            x.reveal().print_reg()
 
 class bit(object):
     n = 1
@@ -943,8 +1066,8 @@ sbit.clear_type = cbit
 sbits.default_type = sbits
 
 class bitsBlock(oram.Block):
-    value_type = sbits
     def __init__(self, value, start, lengths, entries_per_block):
+        self.value_type = type(value)
         oram.Block.__init__(self, value, lengths)
         length = sum(self.lengths)
         used_bits = entries_per_block * length
@@ -989,7 +1112,10 @@ sbits.dynamic_array = DynamicArray
 cbits.dynamic_array = Array
 
 def _complement_two_extend(bits, k):
-    return bits[:k] + [bits[-1]] * (k - len(bits))
+    if len(bits) == 1:
+        return bits + [0] * (k - len(bits))
+    else:
+        return bits[:k] + [bits[-1]] * (k - len(bits))
 
 class _sbitintbase:
     def extend(self, n):
@@ -1047,6 +1173,9 @@ class sbitint(_bitint, _number, sbits, _sbitintbase):
         sub: 2
         mul: 15
         lt: 0
+
+    This class is retained for compatibility, but development now
+    focuses on :py:class:`sbitintvec`.
 
     """
     n_bits = None
@@ -1139,7 +1268,7 @@ class sbitint(_bitint, _number, sbits, _sbitintbase):
         :param k: bit length of input """
         return _sbitintbase.pow2(self, k)
 
-class sbitintvec(sbitvec, _number, _bitint, _sbitintbase):
+class sbitintvec(sbitvec, _bitint, _number, _sbitintbase):
     """
     Vector of signed integers for parallel binary computation::
 
@@ -1174,30 +1303,34 @@ class sbitintvec(sbitvec, _number, _bitint, _sbitintbase):
     def __add__(self, other):
         if util.is_zero(other):
             return self
-        other = self.coerce(other)
-        assert(len(self.v) == len(other.v))
-        v = sbitint.bit_adder(self.v, other.v)
-        return self.from_vec(v)
+        a, b = self.expand(other)
+        v = sbitint.bit_adder(a, b)
+        return self.get_type(len(v)).from_vec(v)
     __radd__ = __add__
+    __sub__ = _bitint.__sub__
+    def __rsub__(self, other):
+        a, b = self.expand(other)
+        return self.from_vec(b) - self.from_vec(a)
     def __mul__(self, other):
         if isinstance(other, sbits):
             return self.from_vec(other * x for x in self.v)
+        elif len(self.v) == 1:
+            return other * self.v[0]
         elif isinstance(other, sbitfixvec):
             return NotImplemented
-        other_bits = util.bit_decompose(other)
+        my_bits, other_bits = self.expand(other, False)
+        matrix = []
         m = float('inf')
-        for x in itertools.chain(self.v, other_bits):
+        for x in itertools.chain(my_bits, other_bits):
             try:
                 m = min(m, x.n)
             except:
                 pass
-        if m == 1:
-            op = operator.mul
-        else:
-            op = operator.and_
-        matrix = []
         for i, b in enumerate(other_bits):
-            matrix.append([op(x, b) for x in self.v[:len(self.v)-i]])
+            if m == 1:
+                matrix.append([x * b for x in my_bits[:len(self.v)-i]])
+            else:
+                matrix.append((sbitvec.from_vec(my_bits[:len(self.v)-i]) * b).v)
         v = sbitint.wallace_tree_from_matrix(matrix)
         return self.from_vec(v[:len(self.v)])
     __rmul__ = __mul__
@@ -1228,6 +1361,8 @@ class cbitfix(object):
     store_in_mem = lambda self, *args: self.v.store_in_mem(*args)
     @classmethod
     def _new(cls, value):
+        if isinstance(value, list):
+            return [cls._new(x) for x in value]
         res = cls()
         if cls.k < value.unit:
             bits = value.bit_decompose(cls.k)
@@ -1241,8 +1376,11 @@ class cbitfix(object):
                                 cbits(0), cbits(0))
 
 class sbitfix(_fix):
-    """ Secret signed integer in one binary register.
+    """ Secret signed fixed-point number in one binary register.
     Use :py:obj:`set_precision()` to change the precision.
+
+    This class is retained for compatibility, but development now
+    focuses on :py:class:`sbitfixvec`.
 
     Example::
 
@@ -1305,7 +1443,7 @@ class sbitfix(_fix):
         cls.set_precision(f, k)
         return cls._new(cls.int_type(other), k, f)
 
-class sbitfixvec(_fix):
+class sbitfixvec(_fix, _vec):
     """ Vector of fixed-point numbers for parallel binary computation.
 
     Use :py:obj:`set_precision()` to change the precision.
@@ -1342,15 +1480,13 @@ class sbitfixvec(_fix):
         super(sbitfixvec, cls).set_precision(f=f, k=k)
         cls.int_type = sbitintvec.get_type(cls.k)
     @classmethod
-    def get_input_from(cls, player):
+    def get_input_from(cls, player, size=1):
         """ Secret input from :py:obj:`player`.
 
         :param: player (int)
         """
-        v = [sbit() for i in range(sbitfix.k)]
-        sbits._check_input_player(player)
-        inst.inputbvec(len(v) + 3, sbitfix.f, player, *v)
-        return cls._new(cls.int_type.from_vec(v))
+        return cls._new(cls.int_type.get_input_from(player, size=size,
+                                                    f=sbitfix.f))
     def __init__(self, value=None, *args, **kwargs):
         if isinstance(value, (list, tuple)):
             self.v = self.int_type.from_vec(sbitvec([x.v for x in value]))

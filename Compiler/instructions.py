@@ -295,6 +295,7 @@ class movint(base.Instruction):
 @base.vectorize
 class pushint(base.StackInstruction):
     """ Pushes clear integer register to the thread-local stack.
+    Considered obsolete.
 
     :param: source (regint)
     """
@@ -304,6 +305,7 @@ class pushint(base.StackInstruction):
 @base.vectorize
 class popint(base.StackInstruction):
     """ Pops from the thread-local stack to clear integer register.
+    Considered obsolete.
 
     :param: destination (regint)
     """
@@ -385,7 +387,15 @@ class use(base.Instruction):
     :param: number (int, -1 for unknown)
     """
     code = base.opcodes['USE']
-    arg_format = ['int','int','int']
+    arg_format = ['int','int','long']
+
+    @classmethod
+    def get_usage(cls, args):
+        from .program import field_types, data_types
+        from .util import find_in_dict
+        return {(find_in_dict(field_types, args[0].i),
+                 find_in_dict(data_types, args[1].i)):
+                 args[2].i}
 
 class use_inp(base.Instruction):
     """ Input usage.  Necessary to avoid reusage while using
@@ -396,7 +406,14 @@ class use_inp(base.Instruction):
     :param: number (int, -1 for unknown)
     """
     code = base.opcodes['USE_INP']
-    arg_format = ['int','int','int']
+    arg_format = ['int','int','long']
+
+    @classmethod
+    def get_usage(cls, args):
+        from .program import field_types, data_types
+        from .util import find_in_dict
+        return {(find_in_dict(field_types, args[0].i), 'input', args[1].i):
+                 args[2].i}
 
 class use_edabit(base.Instruction):
     """ edaBit usage. Necessary to avoid reusage while using
@@ -408,7 +425,11 @@ class use_edabit(base.Instruction):
     :param: number (int, -1 for unknown)
     """
     code = base.opcodes['USE_EDABIT']
-    arg_format = ['int','int','int']
+    arg_format = ['int','int','long']
+
+    @classmethod
+    def get_usage(cls, args):
+        return {('sedabit' if args[0].i else 'edabit', args[1].i): args[2].i}
 
 class use_matmul(base.Instruction):
     """ Matrix multiplication usage. Used for multithreading of
@@ -420,7 +441,7 @@ class use_matmul(base.Instruction):
     :param: number (int, -1 for unknown)
     """
     code = base.opcodes['USE_MATMUL']
-    arg_format = ['int','int','int','int']
+    arg_format = ['int','int','int','long']
 
     @classmethod
     def get_usage(cls, args):
@@ -469,7 +490,12 @@ class use_prep(base.Instruction):
     :param: number of items to use (int, -1 for unknown)
     """
     code = base.opcodes['USE_PREP']
-    arg_format = ['str','int']
+    arg_format = ['str','long']
+
+    @classmethod
+    def get_usage(cls, args):
+        return {('gf2n' if cls.__name__ == 'guse_prep' else 'modp',
+                 args[0].str): args[1].i}
 
 class nplayers(base.Instruction):
     """ Store number of players in clear integer register.
@@ -589,6 +615,18 @@ class submr(base.SubBase):
     __slots__ = []
     code = base.opcodes['SUBMR']
     arg_format = ['sw','c','s']
+
+@base.vectorize
+class prefixsums(base.Instruction):
+    """ Prefix sum.
+
+    :param: result (sint)
+    :param: input (sint)
+
+    """
+    __slots__ = []
+    code = base.opcodes['PREFIXSUMS']
+    arg_format = ['sw','s']
 
 @base.gf2n
 @base.vectorize
@@ -782,30 +820,6 @@ class gbitcom(base.Instruction):
     def has_var_args(self):
         return True
 
-
-###
-### Special GF(2) arithmetic instructions
-###
-
-@base.vectorize
-class gmulbitc(base.MulBase):
-    r""" Clear GF(2^n) by clear GF(2) multiplication """
-    __slots__ = []
-    code = base.opcodes['GMULBITC']
-    arg_format = ['cgw','cg','cg']
-
-    def is_gf2n(self):
-        return True
-
-@base.vectorize
-class gmulbitm(base.MulBase):
-    r""" Secret GF(2^n) by clear GF(2) multiplication """
-    __slots__ = []
-    code = base.opcodes['GMULBITM']
-    arg_format = ['sgw','sg','cg']
-
-    def is_gf2n(self):
-        return True
 
 ###
 ### Arithmetic with immediate values
@@ -1405,7 +1419,6 @@ class inputmixed(inputmixed_base):
         for i, t in self.bases(iter(self.args)):
             yield self.args[i + sum(self.types[t]) + 1]
 
-@base.vectorize
 class inputmixedreg(inputmixed_base):
     """ Store private input in secret registers (vectors). The input is
     read as integer or floating-point number and the latter is then
@@ -1425,6 +1438,21 @@ class inputmixedreg(inputmixed_base):
     """
     code = base.opcodes['INPUTMIXEDREG']
     player_arg_type = 'ci'
+    is_vec = lambda self: True
+
+    def __init__(self, *args):
+        inputmixed_base.__init__(self, *args)
+        for i, t in self.bases(iter(self.args)):
+            n = self.types[t][0]
+            for j in range(i + 1, i + 1 + n):
+                assert args[j].size == self.get_size()
+
+    def get_size(self):
+        return self.args[1].size
+
+    def get_code(self):
+        return inputmixed_base.get_code(
+            self, self.get_size() if self.get_size() > 1 else 0)
 
     def add_usage(self, req_node):
         # player 0 as proxy
@@ -1603,7 +1631,7 @@ class print_char(base.IOInstruction):
     arg_format = ['int']
 
     def __init__(self, ch):
-        super(print_char, self).__init__(ord(ch))
+        super(print_char, self).__init__(ch)
 
 class print_char4(base.IOInstruction):
     """ Output four bytes.
@@ -1707,6 +1735,7 @@ class writesockets(base.IOInstruction):
     from registers into a socket for a specified client id. If the
     protocol uses MACs, the client should be different for every party.
 
+    :param: number of arguments to follow
     :param: client id (regint)
     :param: message type (must be 0)
     :param: vector size (int)
@@ -1845,6 +1874,20 @@ class floatoutput(base.PublicFileIOInstruction):
     __slots__ = []
     code = base.opcodes['FLOATOUTPUT']
     arg_format = ['p','c','c','c','c']
+
+@base.vectorize
+class fixinput(base.PublicFileIOInstruction):
+    """ Binary fixed-point input.
+
+    :param: player (int)
+    :param: destination (cint)
+    :param: exponent (int)
+    :param: input type (0: 64-bit integer, 1: float, 2: double)
+
+    """
+    __slots__ = []
+    code = base.opcodes['FIXINPUT']
+    arg_format = ['p','cw','int','int']
 
 @base.vectorize
 class rand(base.Instruction):
@@ -2162,14 +2205,19 @@ class gconvgf2n(base.Instruction):
 class asm_open(base.VarArgsInstruction):
     """ Reveal secret registers (vectors) to clear registers (vectors).
 
-    :param: number of argument to follow (multiple of two)
+    :param: number of argument to follow (odd number)
+    :param: check after opening (0/1)
     :param: destination (cint)
     :param: source (sint)
     :param: (repeat the last two)...
     """
     __slots__ = []
     code = base.opcodes['OPEN']
-    arg_format = tools.cycle(['cw','s'])
+    arg_format = tools.chain(['int'], tools.cycle(['cw','s']))
+
+    def merge(self, other):
+        self.args[0] |= other.args[0]
+        self.args += other.args[1:]
 
 @base.gf2n
 @base.vectorize
@@ -2281,6 +2329,7 @@ class dotprods(base.VarArgsInstruction, base.DataInstruction,
         yield 'int'
         for i, n in self.bases(args):
             yield 's' + field + 'w'
+            assert n > 2
             for j in range(n - 2):
                 yield 's' + field
             yield 'int'
@@ -2415,12 +2464,17 @@ class shuffle_base(base.DataInstruction):
     def logn(n):
         return int(math.ceil(math.log(n, 2)))
 
+    @classmethod
+    def n_swaps(cls, n):
+        logn = cls.logn(n)
+        return logn * 2 ** logn - 2 ** logn + 1
+
     def add_gen_usage(self, req_node, n):
         # hack for unknown usage
         req_node.increment(('bit', 'inverse'), float('inf'))
         # minimal usage with two relevant parties
         logn = self.logn(n)
-        n_switches = logn * 2 ** logn
+        n_switches = self.n_swaps(n)
         for i in range(self.n_relevant_parties):
             req_node.increment((self.field_type, 'input', i), n_switches)
         # multiplications for bit check
@@ -2430,7 +2484,7 @@ class shuffle_base(base.DataInstruction):
     def add_apply_usage(self, req_node, n, record_size):
         req_node.increment(('bit', 'inverse'), float('inf'))
         logn = self.logn(n)
-        n_switches = logn * 2 ** logn * self.n_relevant_parties
+        n_switches = self.n_swaps(n) * self.n_relevant_parties
         if n != 2 ** logn:
             record_size += 1
         req_node.increment((self.field_type, 'triple'),
@@ -2501,6 +2555,26 @@ class delshuffle(base.Instruction):
     code = base.opcodes['DELSHUFFLE']
     arg_format = ['ci']
 
+class inverse_permutation(base.VectorInstruction, shuffle_base):
+    """ Calculate the inverse permutation of a secret permutation.
+
+    :param: destination (sint)
+    :param: source (sint)
+
+    """
+    __slots__ = []
+    code = base.opcodes['INVPERM']
+    arg_format = ['sw', 's']
+
+    def __init__(self, *args, **kwargs):
+        super(inverse_permutation, self).__init__(*args, **kwargs)
+        assert len(args[0]) == len(args[1])
+
+    def add_usage(self, req_node):
+        self.add_gen_usage(req_node, len(self.args[0]))
+        self.add_apply_usage(req_node, len(self.args[0]), 1)
+
+
 class check(base.Instruction):
     """
     Force MAC check in current thread and all idle thread if current
@@ -2528,7 +2602,7 @@ class sqrs(base.CISC):
         c = [program.curr_block.new_reg('c') for i in range(2)]
         square(s[0], s[1])
         subs(s[2], self.args[1], s[0])
-        asm_open(c[0], s[2])
+        asm_open(False, c[0], s[2])
         mulc(c[1], c[0], c[0])
         mulm(s[3], self.args[1], c[0])
         adds(s[4], s[3], s[3])

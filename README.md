@@ -1,19 +1,27 @@
 # Multi-Protocol SPDZ [![Documentation Status](https://readthedocs.org/projects/mp-spdz/badge/?version=latest)](https://mp-spdz.readthedocs.io/en/latest/?badge=latest) [![Build Status](https://dev.azure.com/data61/MP-SPDZ/_apis/build/status/data61.MP-SPDZ?branchName=master)](https://dev.azure.com/data61/MP-SPDZ/_build/latest?definitionId=7&branchName=master) [![Gitter](https://badges.gitter.im/MP-SPDZ/community.svg)](https://gitter.im/MP-SPDZ/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
-Software to benchmark various secure multi-party computation (MPC)
-protocols such as SPDZ, SPDZ2k, MASCOT, Overdrive, BMR garbled circuits,
-Yao's garbled circuits, and computation based on
-three-party replicated secret sharing as well as Shamir's secret
-sharing (with an honest majority).
+This is a software to benchmark various secure multi-party computation
+(MPC) protocols in a variety of security models such as honest and
+dishonest majority, semi-honest/passive and malicious/active
+corruption. The underlying technologies span secret sharing,
+homomorphic encryption, and garbled circuits.
 
 #### Contact
 
-[Filing an issue on GitHub](../../issues) is the preferred way of contacting
+[Filing an issue on GitHub](https://github.com/data61/MP-SPDZ/issues)
+is the preferred way of contacting
 us, but you can also write an email to mp-spdz@googlegroups.com
 ([archive](https://groups.google.com/forum/#!forum/mp-spdz)). Before
 reporting a problem, please check against the list of [known
 issues and possible
 solutions](https://mp-spdz.readthedocs.io/en/latest/troubleshooting.html).
+
+##### Filing Issues
+
+Please file complete code examples because it's usually not possible
+to reproduce problems from incomplete code, and please include which
+protocol you have used (if applicable) because there are considerable
+differences between the various protocols.
 
 #### Frequently Asked Questions
 
@@ -34,10 +42,9 @@ the top folder:
 
 ```
 Scripts/tldr.sh
-./compile.py tutorial
 echo 1 2 3 4 > Player-Data/Input-P0-0
 echo 1 2 3 4 > Player-Data/Input-P1-0
-Scripts/mascot.sh tutorial
+Scripts/compile-run.py -E mascot tutorial
 ```
 
 This runs [the tutorial](Programs/Source/tutorial.mpc) with two
@@ -48,7 +55,7 @@ parties and malicious security.
 On Linux, this requires a working toolchain and [all
 requirements](#requirements). On Ubuntu, the following might suffice:
 ```
-sudo apt-get install automake build-essential git libboost-dev libboost-thread-dev libntl-dev libsodium-dev libssl-dev libtool m4 python3 texinfo yasm
+sudo apt-get install automake build-essential clang cmake git libboost-dev libboost-thread-dev libntl-dev libsodium-dev libssl-dev libtool m4 python3 texinfo yasm
 ```
 On MacOS, this requires [brew](https://brew.sh) to be installed,
 which will be used for all dependencies.
@@ -56,16 +63,15 @@ It will execute [the
 tutorial](Programs/Source/tutorial.mpc) with two parties and malicious
 security.
 
-Note that this only works with a git clone but not with a binary
-release.
-
 ```
-make -j 8 tldr
-./compile.py tutorial
+make setup
 echo 1 2 3 4 > Player-Data/Input-P0-0
 echo 1 2 3 4 > Player-Data/Input-P1-0
-Scripts/mascot.sh tutorial
+Scripts/compile-run.py -E mascot tutorial
 ```
+
+On strong enough hardware setups (several cores and GB of RAM), you
+can speed up the last step by running `make -j8 mascot-party.x` beforehand.
 
 #### TL;DR (Docker)
 Build a docker image for `mascot-party.x`:
@@ -86,11 +92,9 @@ See the [`Dockerfile`](./Dockerfile) for examples of how it can be used.
 
 The primary aim of this software is to run the same computation in
 various protocols in order to compare the performance. All protocols
-in the matrix below are fully implemented. In addition, there are
-further protocols implemented only partially, most notably the
-Overdrive protocols. They are deactivated by default in order to avoid
-confusion over security. See the [section on compilation](#Compilation)
-on how to activate them.
+in the matrix below are fully implemented. However, this does not mean
+that the software has undergone a security review as should be done
+with critical production code.
 
 #### Protocols
 
@@ -181,29 +185,26 @@ there are a few things to consider:
 
 - Minor variants: Some command-line options change aspects of the
   protocols such as:
-
-  - `--bucket-size`: In some malicious binary computation and
-    malicious edaBit generation, a smaller bucket size allows
-    preprocessing in smaller batches at a higher asymptotic cost.
-
-  - `--batch-size`: Preprocessing in smaller batches avoids generating
-    too much but larger batches save communication rounds.
-
-  - `--direct`: In dishonest-majority protocols, direct communication
-    instead of star-shaped saves communication rounds at the expense
-    of a quadratic amount. This might be beneficial with a small
-    number of parties.
-
-  - `--bits-from-squares`: In some protocols computing modulo a prime
-    (Shamir, Rep3, SPDZ-wise), this switches from generating random
-    bits via XOR of parties' inputs to generation using the root of a
-    random square.
+    - `--bucket-size`: In some malicious binary computation and
+      malicious edaBit generation, a smaller bucket size allows
+      preprocessing in smaller batches at a higher asymptotic cost.
+    - `--batch-size`: Preprocessing in smaller batches avoids generating
+      too much but larger batches save communication rounds.
+    - `--direct`: In dishonest-majority protocols, direct communication
+      instead of star-shaped saves communication rounds at the expense
+      of a quadratic amount. This might be beneficial with a small
+      number of parties.
+    - `--bits-from-squares`: In some protocols computing modulo a prime
+      (Shamir, Rep3, SPDZ-wise), this switches from generating random
+      bits via XOR of parties' inputs to generation using the root of a
+      random square.
 
 #### Paper and Citation
 
 The design of MP-SPDZ is described in [this
 paper](https://eprint.iacr.org/2020/521). If you use it for an
 academic project, please cite:
+
 ```
 @inproceedings{mp-spdz,
     author = {Marcel Keller},
@@ -269,58 +270,125 @@ compute the preprocessing time for a particular computation.
 
 #### Requirements
 
- - GCC 5 or later (tested with up to 11) or LLVM/clang 5 or later
-   (tested with up to 12). We recommend clang because it performs better.
- - MPIR library, compiled with C++ support (use flag `--enable-cxx` when running configure). You can use `make -j8 tldr` to install it locally.
+ - GCC 5 or later (tested with up to 11) or LLVM/clang 6 or later
+   (tested with up to 14). The default is to use clang because it performs
+   better. Note that GCC 5/6 and clang 9 don't support libOTe, so you
+   need to deactivate its use for these compilers (see the next
+   section).
+ - For protocol using oblivious transfer, libOTe with [the necessary
+   patches](https://github.com/mkskeller/softspoken-implementation)
+   but without SimplestOT. The easiest way is to run `make libote`,
+   which will install it as needed in a subdirectory. libOTe requires
+   CMake of version at least 3.15, which is not available by default
+   on older systems such as Ubuntu 18.04. You can run `make cmake` to
+   install it locally.
+   libOTe also requires boost of version at least 1.75, which is not
+   available by default on relatively recent systems such as Ubuntu
+   22.04. You can install it locally by running `make boost`.
+ - MPIR library, compiled with C++ support (use flag `--enable-cxx` when running configure). You can use `make -j8 mpir` to install it locally.
  - libsodium library, tested against 1.0.18
- - OpenSSL, tested against 1.1.1
- - Boost.Asio with SSL support (`libboost-dev` on Ubuntu), tested against 1.71
- - Boost.Thread for BMR (`libboost-thread-dev` on Ubuntu), tested against 1.71
+ - OpenSSL, tested against 3.0.2
+ - Boost.Asio with SSL support (`libboost-dev` on Ubuntu), tested against 1.81
+ - Boost.Thread for BMR (`libboost-thread-dev` on Ubuntu), tested against 1.81
  - x86 or ARM 64-bit CPU (the latter tested with AWS Gravitron and
    Apple Silicon)
  - Python 3.5 or later
- - NTL library for homomorphic encryption (optional; tested with NTL 10.5)
+ - NTL library for homomorphic encryption (optional; tested with NTL 11.5.1)
  - If using macOS, Sierra or later
  - Windows/VirtualBox: see [this
    issue](https://github.com/data61/MP-SPDZ/issues/557) for a discussion
 
 #### Compilation
 
-1) Edit `CONFIG` or `CONFIG.mine` to your needs:
+1. Edit `CONFIG` or `CONFIG.mine` to your needs:
 
- - On x86, the binaries are optimized for the CPU you are
-   compiling on.
-   For all optimizations on x86, a CPU supporting AES-NI, PCLMUL, AVX2, BMI2, ADX is
-   required. This includes mainstream processors released 2014 or later.
-   If you intend to run on a different CPU than compiling, you might
-   need to change the `ARCH` variable in `CONFIG` or `CONFIG.mine` to
-   `-march=<cpu>`. See the [GCC
-   documentation](https://gcc.gnu.org/onlinedocs/gcc/x86-Options.html)
-   for the possible options. To run OT-based protocols on x86 without AVX,
-   add `AVX_OT = 0` in addition.
- - For optimal results on Linux on ARM, add `ARCH =
-   -march=-march=armv8.2-a+crypto` to `CONFIG.mine`. This enables the
-   hardware support for AES. See the [GCC
-   documentation](https://gcc.gnu.org/onlinedocs/gcc/AArch64-Options.html#AArch64-Options)
-   on available options.
- - To benchmark online-only protocols or Overdrive offline phases, add the following line at the top: `MY_CFLAGS = -DINSECURE`
- - `PREP_DIR` should point to a local, unversioned directory to store preprocessing data (the default is `Player-Data` in the current directory).
- - `SSL_DIR` should point to a local, unversioned directory to store ssl keys (the default is `Player-Data` in the current directory).
- - For homomorphic encryption with GF(2^40), set `USE_NTL = 1`.
+    - On x86, the binaries are optimized for the CPU you are compiling
+      on. For all optimizations on x86, a CPU supporting AES-NI,
+      PCLMUL, AVX2, BMI2, ADX is required. This includes mainstream
+      processors released 2014 or later. If you intend to run on a
+      different CPU than compiling, you might need to change the `ARCH`
+      variable in `CONFIG` or `CONFIG.mine` to `-march=<cpu>`. See the
+      [GCC
+      documentation](https://gcc.gnu.org/onlinedocs/gcc/x86-Options.html)
+      for the possible options.
+    - For optimal results on Linux on ARM, add `ARCH = -march=armv8.2-a+crypto`
+      to `CONFIG.mine`. This enables the hardware support for AES. See the [GCC
+      documentation](https://gcc.gnu.org/onlinedocs/gcc/AArch64-Options.html#AArch64-Options) on available options.
+    - To benchmark online-only protocols or Overdrive offline phases, add the following line at the top: `MY_CFLAGS = -DINSECURE`
+    - `PREP_DIR` should point to a local, unversioned directory to store preprocessing data (the default is `Player-Data` in the current directory).
+    - `SSL_DIR` should point to a local, unversioned directory to store ssl keys (the default is `Player-Data` in the current directory).
+    - For homomorphic encryption with GF(2^40), set `USE_NTL = 1`.
+    - To use KOS instead of SoftSpokenOT, add `USE_KOS = 1` and
+      `SECURE = -DINSECURE` to `CONFIG.mine`. This is necessary with
+      GCC 5 and 6 because these compilers don't support the C++
+      standard used by libOTe.
 
-2) Run `make` to compile all the software (use the flag `-j` for faster
-compilation using multiple threads). See below on how to compile specific
-parts only. Remember to run `make clean` first after changing `CONFIG`
-or `CONFIG.mine`.
+2. Run `make` to compile all the software (use the flag `-j` for faster
+   compilation using multiple threads). See below on how to compile specific
+   parts only. Remember to run `make clean` first after changing `CONFIG`
+   or `CONFIG.mine`.
 
-# Running computation
+# Running Computation
 
 See `Programs/Source/` for some example MPC programs, in particular
 `tutorial.mpc`. Furthermore, [Read the
 Docs](https://mp-spdz.readthedocs.io/en/latest/) hosts a more
-detailed reference of the high-level functionality extracted from the
-Python code in the `Compiler` directory as well as a summary of
-relevant compiler options.
+detailed reference of all aspects of MP-SPDZ.
+
+There are three ways of running computation:
+
+1. Separate compilation and execution. This is the default in the
+   further documentation. It allows to run the same program several
+   times while only compiling once, for example:
+
+   ```
+   ./compile.py <program> <argument>
+   Scripts/mascot.sh <program>-<argument> [<runtime-arg>...]
+   Scripts/mascot.sh <program>-<argument> [<runtime-arg>...]
+   ```
+
+2. One-command local execution. This compiles the program and the
+   virtual machine if necessary before executing it locally with the
+   given protocol. The name of the protocols correspond to the script
+   names below (without the `.sh`). Furthermore, some
+   protocol-specific optimization options are automatically used as
+   well as required options.
+
+   ```
+   Scripts/compile-run.py -E mascot <program> <argument> -- [<runtime-arg>...]
+   ```
+
+3. One-command remote execution. This compiles the program and the
+   virtual machine if necessary before uploading them together with
+   all necessary input and certificate files via SSH.
+
+   ```
+   Scripts/compile-run.py -HOSTS -E mascot <program> <argument> -- [<runtime-arg>...]
+   ```
+
+   `HOSTS` has to be a text file in the following format:
+
+   ```
+   [<user>@]<host0>[/<path>]
+   [<user>@]<host1>[/<path>]
+   ...
+   ```
+
+   If <path> does not start with `/` (only one `/` after the
+   hostname), the path with be relative to the home directory of the
+   user. Otherwise (`//` after the hostname it will be relative to the
+   root directory.
+
+Even with the integrated execution it is important to keep in mind
+that there are two different phases, the compilation and the run-time
+phase. Any secret data is only available in the second phase, when the
+Python compilation has concluded. Therefore, the types like `sint` and
+`sfix` are mere placeholders for data to be used later, and they don't
+contain any shares. See also [the
+documentation](https://mp-spdz.readthedocs.io/en/latest/compilation.html#compilation-vs-run-time)
+for what this means when using Python data structures and Python
+language features.
+
 
 ### Compiling high-level programs
 
@@ -332,8 +400,10 @@ to be compiled accordingly.
 ```./compile.py [-F <integer bit length>] [-P <prime>] <program>```
 
 The integer bit length defaults to 64, and the prime defaults to none
-given. If a prime is given, it has to be at least two bits longer
-than the integer length.
+given. If a prime is given, it has to be at least two bits longer than
+the integer length. Note that `-P` is optional, and it involves
+algorithms that are more expensive while allowing for a wider range of
+integer lengths.
 
 Note that in this context integers do not wrap around according to the
 bit integer bit length but the length is used for non-linear
@@ -449,11 +519,13 @@ used by
 access such circuits from the high-level language if they are present
 in `Programs/Circuits`. To run the AES-128 circuit provided with
 SCALE-MAMBA, you can run the following:
+
 ```
 make Programs/Circuits
 ./compile.py aes_circuit
 Scripts/semi.sh aes_circuit
 ```
+
 This downloads the circuit, compiles it to MP-SPDZ bytecode, and runs
 it as semi-honest two-party computation 1000 times in parallel. It
 should then output the AES test vector
@@ -489,13 +561,17 @@ You could then run this with the same args as used with `compile.py`:
 python hello_world.mpc <compile args>
 ```
 
-This is particularly useful if want to add new command line arguements specifically for your `.mpc` file. See [test_args.mpc](Programs/Source/test_args.mpc) for more details on this use case.
+This is particularly useful if want to add new command line arguments specifically for your `.mpc` file. See [test_args.mpc](Programs/Source/test_args.mpc) for more details on this use case.
 
 Note that when using this approach, all objects provided in the high level interface (e.g. sint, print_ln) need to be imported, because the `.mpc` file is interpreted directly by Python (instead of being read by `compile.py`.)
 
 #### Compiling and running programs from external directories
 
-Programs can also be edited, compiled and run from any directory with the above basic structure. So for a source file in `./Programs/Source/`, all MP-SPDZ scripts must be run from `./`. The `setup-online.sh` script must also be run from `./` to create the relevant data. For example:
+Programs can also be edited, compiled and run from any directory with
+the above basic structure. So for a source file in
+`./Programs/Source/`, all MP-SPDZ scripts must be run from `./`. Any
+setup scripts such as `setup-ssl.sh` script must also be run from `./`
+to create the relevant data. For example:
 
 ```
 MP-SPDZ$ cd ../
@@ -506,10 +582,10 @@ $ vi Programs/Source/test.mpc
 $ ../MP-SPDZ/compile.py test.mpc
 $ ls Programs/
 Bytecode  Public-Input  Schedules  Source
-$ ../MP-SPDZ/Scripts/setup-online.sh
+$ ../MP-SPDZ/Scripts/setup-ssl.sh
 $ ls
 Player-Data Programs
-$ ../MP-SPDZ/Scripts/run-online.sh test
+$ ../MP-SPDZ/Scripts/rep-field.sh test
 ```
 
 ### TensorFlow inference
@@ -536,8 +612,8 @@ This requires TensorFlow and the axel command-line utility to be
 installed. It runs inference with
 three-party semi-honest computation, similar to CrypTFlow's
 Porthos. Replace 1 by the desired number of thread in the last two
-lines. If you run with any other protocol, you will need to remove
-`trunc_pr` and `split`. Also note that you will need to use a
+lines. If you run with some other protocols, you will need to remove
+`trunc_pr` and/or `split`. Also note that you will need to use a
 CrypTFlow repository that includes the patch in
 https://github.com/mkskeller/EzPC/commit/2021be90d21dc26894be98f33cd10dd26769f479.
 
@@ -557,8 +633,9 @@ This runs the compiled bytecode in cleartext computation.
 
 Some full implementations require oblivious transfer, which is
 implemented as OT extension based on
-https://github.com/mkskeller/SimpleOT or OpenSSL (activate the
-latter with `AVX_OT = 0` in `CONFIG` or `CONFIG.mine`).
+https://github.com/mkskeller/SimpleOT or
+https://github.com/mkskeller/SimplestOT_C, depending on whether AVX is
+available.
 
 ### Secret sharing
 
@@ -583,10 +660,7 @@ The following table shows all programs for dishonest-majority computation using 
 | `tinier-party.x` | [FKOS15](https://eprint.iacr.org/2015/901) | Binary | Malicious | `tinier.sh` |
 
 Mama denotes MASCOT with several MACs to increase the security
-parameter to a multiple of the prime length. The number of MACs
-defaults to three, and it is controlled by the `N_MAMA_MACS`
-compile-time parameter (add `MY_CFLAGS += -DN_MAMA_MACS=<number of
-MACs>` to `CONFIG.mine`).
+parameter to a multiple of the prime length.
 
 Semi and Semi2k denote the result of stripping MASCOT/SPDZ2k of all
 steps required for malicious security, namely amplifying, sacrificing,
@@ -659,11 +733,6 @@ e.g. if this machine is name `diffie` on the local network:
 The software uses TCP ports around 5000 by default, use the `-pn`
 argument to change that.
 
-If you are using the SPDZ2k protocol in non-interactive mode to run a 
-program compiled with a ring size different from 64, you must specify
-the ring size in the script to run the program as follows:
-
-`Scripts/spdz2k.sh -R <ring-size> tutorial`
 
 ### Yao's garbled circuits
 
@@ -680,9 +749,10 @@ Compile the virtual machine:
 
 and the high-level program:
 
-`./compile.py -B <integer bit length> <program>`
+`./compile.py -G -B <integer bit length> <program>`
 
 Then run as follows:
+
   - Garbler: ```./yao-party.x [-I] -p 0 <program>```
   - Evaluator: ```./yao-party.x [-I] -p 1 -h <garbler host> <program>```
 
@@ -748,7 +818,7 @@ for computation modulo a power of two. It involves sharing both a
 secret value and information-theoretic tag similar to SPDZ but not
 with additive secret sharing, hence the name.
 Rep4 refers to the four-party protocol by [Dalskov et
-al.](https://eprint.iacr.org/2020/1330).
+al.](https://eprint.iacr.org/2020/1330)
 `malicious-rep-bin-party.x` is based on cut-and-choose triple
 generation by [Furukawa et al.](https://eprint.iacr.org/2016/944) but
 using Beaver multiplication instead of their post-sacrifice
@@ -842,7 +912,7 @@ lists the available schemes.
 | Program | Protocol | Dishonest Maj. | Malicious | \# parties | Script |
 | --- | --- | --- | --- | --- | --- |
 | `real-bmr-party.x` | MASCOT | Y | Y | 2 or more | `real-bmr.sh` |
-| `semi-bmr-party.x` | Semi | Y | Y | 2 or more | `semi-bmr.sh` |
+| `semi-bmr-party.x` | Semi | Y | N | 2 or more | `semi-bmr.sh` |
 | `shamir-bmr-party.x` | Shamir | N | N | 3 or more | `shamir-bmr.sh` |
 | `mal-shamir-bmr-party.x` | Shamir | N | Y | 3 or more | `mal-shamir-bmr.sh` |
 | `rep-bmr-party.x` | Replicated | N | N | 3 | `rep-bmr.sh` |
@@ -859,7 +929,7 @@ three parties, change the definition of `MAX_N_PARTIES` in
 
 In order to compile a high-level program, use `./compile.py -B`:
 
-`./compile.py -B 32 tutorial`
+`./compile.py -G -B 32 tutorial`
 
 Finally, run the two parties as follows:
 
@@ -886,6 +956,8 @@ that:
 2. You can run insecure preprocessing. For this, you will have to
    (re)compile the software after adding `MY_CFLAGS = -DINSECURE` to
    `CONFIG.mine` in order to run this insecure generation.
+   Make sure to run `make clean` before recompiling any binaries.
+   Then, you need to run `make Fake-Offline.x <protocol>-party.x`.
 
 ### SPDZ
 
@@ -991,6 +1063,7 @@ Compile the virtual machine:
 `make -j 8 bmr`
 
 After compiling the mpc file:
+
 - Run everything locally: `Scripts/bmr-program-run.sh <program>
 <number of parties>`.
 - Run on different hosts: `Scripts/bmr-program-run-remote.sh <program>
@@ -1002,7 +1075,7 @@ You can benchmark the ORAM implementation as follows:
 
 1) Edit `Program/Source/gc_oram.mpc` to change size and to choose
 Circuit ORAM or linear scan without ORAM.
-2) Run `./compile.py -D gc_oram`. The `-D` argument instructs the
+2) Run `./compile.py -G -D gc_oram`. The `-D` argument instructs the
 compiler to remove dead code. This is useful for more complex programs
 such as this one.
 3) Run `gc_oram` in the virtual machines as explained above.
@@ -1015,7 +1088,7 @@ the actual computation. First, compile the binary:
 `make <protocol>-offline.x`
 
 At the time of writing the supported protocols are `mascot`,
-`cowgear`, and `mal-shamir`.
+`cowgear`, mal-shamir`, `semi`, `semi2k`, and `hemi`.
 
 If you have not done so already, then compile your high-level program:
 
@@ -1036,6 +1109,7 @@ same player number in the preprocessing and the online phase.
 #### SPDZ-2 offline phase
 
 This implementation is suitable to generate the preprocessed data used in the online phase.
+You need to compile with `USE_NTL = 1` in `CONFIG.mine` to run this.
 
 For quick run on one machine, you can call the following:
 
@@ -1057,9 +1131,7 @@ These implementations are not suitable to generate the preprocessed
 data for the online phase because they can only generate either
 multiplication triples or bits.
 
-HOSTS must contain the hostnames or IPs of the players, see HOSTS.example for an example.
-
-Then, MASCOT can be run as follows:
+MASCOT can be run as follows:
 
 `host1:$ ./ot-offline.x -p 0 -c`
 

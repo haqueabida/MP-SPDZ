@@ -7,8 +7,7 @@
 #include "Protocols/dabit.h"
 #include "Math/Setup.h"
 #include "GC/BitPrepFiles.h"
-
-#include "Protocols/MascotPrep.hpp"
+#include "Tools/benchmarking.h"
 
 template<class T>
 Preprocessing<T>* Preprocessing<T>::get_live_prep(SubProcessor<T>* proc,
@@ -42,6 +41,20 @@ Preprocessing<T>* Preprocessing<T>::get_new(
     return new GC::BitPrepFiles<T>(N,
         get_prep_sub_dir<T>(PREP_DIR, N.num_players()), usage,
         BaseMachine::thread_num);
+}
+
+template<class T>
+T Preprocessing<T>::get_random_from_inputs(int nplayers)
+{
+  T res;
+  for (int j = 0; j < nplayers; j++)
+    {
+      T tmp;
+      typename T::open_type _;
+      this->get_input_no_count(tmp, _, j);
+      res += tmp;
+    }
+  return res;
 }
 
 template<class T>
@@ -299,7 +312,9 @@ template<int>
 void Sub_Data_Files<T>::buffer_edabits_with_queues(bool strict, int n_bits,
         false_type)
 {
-  insecure("reading edaBits from files");
+  if (edabit_buffers.empty())
+    insecure("reading edaBits from files");
+
   if (edabit_buffers.find(n_bits) == edabit_buffers.end())
     {
       string filename = PrepBase::get_edabit_filename(prep_data_dir,
@@ -312,7 +327,10 @@ void Sub_Data_Files<T>::buffer_edabits_with_queues(bool strict, int n_bits,
     }
   auto& buffer = *edabit_buffers[n_bits];
   if (buffer.peek() == EOF)
-    buffer.seekg(file_signature<T>().get_length());
+    {
+      buffer.seekg(0);
+      check_file_signature<T>(buffer, "");
+    }
   edabitvec<T> eb;
   eb.input(n_bits, buffer);
   this->edabits[{strict, n_bits}].push_back(eb);
