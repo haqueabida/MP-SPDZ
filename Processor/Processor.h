@@ -36,9 +36,9 @@ class SubProcessor
 
   void resize(size_t size)       { C.resize(size); S.resize(size); }
 
-  void matmulsm_prep(int i, const CheckVector<T>& source,
+  void matmulsm_prep(int ii, int j, const CheckVector<T>& source,
       const vector<int>& dim, size_t a, size_t b);
-  void matmulsm_finalize(int i, const vector<int>& dim,
+  void matmulsm_finalize(int i, int j, const vector<int>& dim,
       typename vector<T>::iterator C);
 
   template<class sint, class sgf2n> friend class Processor;
@@ -171,11 +171,6 @@ public:
   CheckVector<long>& get_Ci()
     { return Ci; }
 
-  virtual long sync_Ci(size_t) const
-  {
-    throw not_implemented();
-  }
-
   virtual ofstream& get_public_output()
   {
     throw not_implemented();
@@ -286,7 +281,6 @@ class Processor : public ArithmeticProcessor
   void fixinput(const Instruction& instruction);
 
   // synchronize in asymmetric protocols
-  long sync_Ci(size_t i) const;
   long sync(long x) const;
 
   ofstream& get_public_output();
